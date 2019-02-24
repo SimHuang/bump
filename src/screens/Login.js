@@ -4,7 +4,9 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 
 class Login extends Component {
     render() {
-        <Text>hello</Text>
+        return (
+            <Text>Login</Text>
+        )
     }
 }
 

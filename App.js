@@ -13,6 +13,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from 'firebase';
 
 import Login from './src/screens/Login';
+import Signup from './src/screens/Signup';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -21,16 +22,17 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
+// createStackNavigator returns a component 
+// we have to store all our screens here that requires navigation
 const AppNavigator = createStackNavigator({
-  Login: {
-    screen: Login
-  }
+  Login: Login,
+  Signup: Signup
 });
 
 type Props = {};
-export default class App extends Component<Props> {
+class App extends Component<Props> {
   componentDidMount() {    
-      // Initialize Firebase
+    // Initialize Firebase
     var config = {
       apiKey: "AIzaSyC9N-zIxOLB4TERIQLkeWVQnv1gsbuEvsM",
       authDomain: "bump-d25e4.firebaseapp.com",
@@ -41,16 +43,15 @@ export default class App extends Component<Props> {
     };
     firebase.initializeApp(config);
   }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
+      <AppNavigator/>
     );
   }
 }
+
+export default createAppContainer(AppNavigator)
 
 const styles = StyleSheet.create({
   container: {
