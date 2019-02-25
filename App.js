@@ -10,13 +10,20 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import { provider } from 'react-redux';
+import { createStore } from 'redux';
+
 import firebase from 'firebase';
 import { firebaseConfig } from './config';
+
+import CombineReducer from './src/reducer/index';
 
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import EventDetail from './src/screens/EventDetail';
 import EventFeed from './src/screens/EventFeed';
+
+const store = createStore(CombineReducer); 
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -42,7 +49,9 @@ class App extends Component<Props> {
 
   render() {
     return (
-      <AppNavigator/>
+      <Provider store={store}>
+        <AppNavigator/>
+      </Provider>
     );
   }
 }
