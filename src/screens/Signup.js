@@ -4,11 +4,12 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import { Input, Button } from 'react-native-elements';
 
 import { firebaseConfig } from '../../config';
-import firebase from 'firebase';
+import firebase from '@firebase/app';
+import '@firebase/auth'
 
 class Signup extends Component {
     componentDidMount() {
-        firebase.initializeApp(firebaseConfig);
+        //firebase.initializeApp(firebaseConfig);
     }
 
     loginOnpressHanlder(email, password) {

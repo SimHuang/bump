@@ -13,7 +13,7 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import { provider } from 'react-redux';
 import { createStore } from 'redux';
 
-import firebase from 'firebase';
+import firebase from '@firebase/app';
 import { firebaseConfig } from './config';
 
 import CombineReducer from './src/reducer/index';

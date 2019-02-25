@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
-import firebase from 'firebase';
+import firebase from '@firebase/app';
+import '@firebase/auth';
 import { firebaseConfig } from '../../config';
 
 import { Input, Button } from 'react-native-elements';
