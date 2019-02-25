@@ -1,11 +1,57 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import { Input, Button } from 'react-native-elements';
+
+import { firebaseConfig } from '../../config';
+import firebase from 'firebase';
 
 class Signup extends Component {
+    componentDidMount() {
+        firebase.initializeApp(firebaseConfig);
+    }
+
+    loginOnpressHanlder(email, password) {
+        console.log('go to login screen');
+    }
+
+    createAccount() {
+        firebase.auth().createUserWithEmailAndPassword("simhuang12@yahoo.com", "expertnerd123")
+        .catch((error) => {
+            console.log('error' + error);
+        });
+    }
+
     render() {
         return (
-            <Text>signup</Text>
+            <View>
+                <Input
+                    placeholder="Enter email"
+                />
+                <Input
+                    placeholder="Enter username"
+                />
+                <Input
+                    placeholder="Enter first name"
+                />
+                <Input
+                    placeholder="Enter last name"
+                />
+                <Input
+                    placeholder="Enter password"
+                />
+                <Input
+                    placeholder="Enter password again"
+                />
+                <Button 
+                    title="Create Account"
+                    onPress={()=> this.createAccount()}/>
+                <Button 
+                    title="Already have an account? Log in."
+                    type="clear"
+                    onPress={() => this.loginOnpressHanlder()}
+                />
+            </View>
         )
     }
 }

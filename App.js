@@ -11,9 +11,12 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from 'firebase';
+import { firebaseConfig } from './config';
 
 import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
+import EventDetail from './src/screens/EventDetail';
+import EventFeed from './src/screens/EventFeed';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -23,10 +26,12 @@ const instructions = Platform.select({
 });
 
 // createStackNavigator returns a component 
-// we have to store all our screens here that requires navigation
+// we have to store all our screens here that requires navagivation
 const AppNavigator = createStackNavigator({
   Login: Login,
-  Signup: Signup
+  Signup: Signup,
+  EventDetail: EventDetail,
+  EventFeed: EventFeed
 });
 
 type Props = {};
