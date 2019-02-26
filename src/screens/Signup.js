@@ -8,6 +8,16 @@ import firebase from '@firebase/app';
 import '@firebase/auth'
 
 class Signup extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            "email": null,
+            "firstName": null,
+            "lastName": null, 
+            "password": null,
+            "passwordAgain": null
+        }
+    }
     componentDidMount() {
         //firebase.initializeApp(firebaseConfig);
     }
