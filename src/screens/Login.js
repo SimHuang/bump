@@ -17,7 +17,9 @@ class Login extends Component {
         }
     }
     componentDidMount() {
-        firebase.initializeApp(firebaseConfig)
+        if(!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig)
+        }
         this.trackAuthenticateState();
     }
 

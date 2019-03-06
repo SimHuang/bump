@@ -18,28 +18,38 @@ class Signup extends Component {
             "passwordAgain": null,
             "message": null
         }
+        this.unsubscribe = null;
 
     }
     componentDidMount() {
+        console.log('you are in the sign up screen');
         //firebase.initializeApp(firebaseConfig);
-        firebase.auth().onAuthStateChanged((user) => {
+        this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
             if (user) {
+                console.log('user logged in');
                 user.updateProfile({
                     firstName: this.state.firstName,
                     lastName: this.state.lastName,
                     fullName: this.state.firstName + this.state.lastName
                 });
-
-                this.props.navigation.navigate('EventFeed');
+                this.setState({message: 'user created'});
+                this.props.navigation.navigate('AppNavigator');
             } else {
                 //not signed in implementation
             }
         });
     }
 
+    componentWillUnmount() {
+        if(this.unsubscribe) {
+            this.unsubscribe();
+        }
+    }
+
     loginOnpressHanlder(email, password) {
         console.log('go to login screen');
-        this.setState({message: this.state.firstName})
+        this.props.navigation.navigate('Login');
+        this.setState({message: this.state.firstName});
     }
 
     createAccount() {
@@ -48,7 +58,7 @@ class Signup extends Component {
             firebase.auth().createUserWithEmailAndPassword(email, password)
             .catch((message) => {
                 console.log('message' + message);
-                this.setState({message: message});
+                // this.setState({message: message});
             });
         }
     }
@@ -57,11 +67,6 @@ class Signup extends Component {
         const userInput = this.state;
         if (!userInput.email || !userInput.email.includes('@')) {
             this.setState({message: 'Please enter a valid email.'})
-            return false;
-        }
-
-        if (!userInput.username || userInput.username === '') {
-            this.setState({message: 'Please enter a valid username'})
             return false;
         }
 
@@ -84,7 +89,7 @@ class Signup extends Component {
             this.setState({message: 'Password does not match.'});
             return false;
         }
-
+        console.log('error craeting account');
         return true;
     }
 
@@ -131,13 +136,14 @@ class Signup extends Component {
                 />
                 <Button 
                     title="Create Account"
-                    onPress={()=> this.createAccount()}/>
+                    onPress={()=> this.createAccount()}
+                />
                 <Button 
                     title="Already have an account? Log in."
                     type="clear"
                     onPress={() => this.loginOnpressHanlder()}
                 />
-                <Text>{this.state.firstName}</Text>
+                <Text>{this.state.message}</Text>
             </View>
         )
     }

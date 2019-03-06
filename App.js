@@ -9,7 +9,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import { createStackNavigator, createAppContainer } from "react-navigation";
+import { createSwitchNavigator, createStackNavigator, createAppContainer } from "react-navigation";
 // import { provider } from 'react-redux';
 // import { createStore } from 'redux';
 
@@ -35,26 +35,42 @@ import EventFeed from './src/screens/EventFeed';
 // createStackNavigator returns a component 
 // we have to store all our screens here that requires navagivation
 const AppNavigator = createStackNavigator({
-  Login: Login,
-  Signup: Signup,
+  // Login: Login,
+  // Signup: Signup,
+  EventFeed: EventFeed,
   EventDetail: EventDetail,
-  EventFeed: EventFeed
 });
+
+const SignupNavigator = createStackNavigator({
+  Signup: Signup
+});
+
+const LoginNavigator = createStackNavigator({
+  Login: Login
+});
+
+const Main = createAppContainer(createSwitchNavigator(
+  {AppNavigator, SignupNavigator, LoginNavigator}, 
+  {initialRouteName: 'LoginNavigator'})
+);
 
 type Props = {};
 class App extends Component<Props> {
   componentDidMount() {    
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
   }
 
+  
   render() {
     return (
-      <AppNavigator/>
+      <Main />
     );
   }
 }
 
-export default createAppContainer(AppNavigator)
+export default App
 
 // const styles = StyleSheet.create({
 //   container: {
