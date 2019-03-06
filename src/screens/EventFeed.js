@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from '../../config';
-import { Button } from 'react-native-elements';
+import { Button, Header } from 'react-native-elements';
 
 class EventFeed extends Component {
 
@@ -19,7 +19,10 @@ class EventFeed extends Component {
     }
     render() {
         return (
-            <View>
+            <View style={{backgroundColor: 'white', flex:1}}>
+                <Header
+                    centerComponent={{ text: 'Home', style: { color: '#fff' } }}
+                />
                 <Text>Event FEED view</Text>
                 <Button 
                     onPress={() => {this.logout()}}

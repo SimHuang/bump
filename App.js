@@ -9,7 +9,10 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
-import { createSwitchNavigator, createStackNavigator, createAppContainer } from "react-navigation";
+import { createSwitchNavigator, 
+        createStackNavigator, 
+        createBottomTabNavigator, 
+        createAppContainer } from "react-navigation";
 // import { provider } from 'react-redux';
 // import { createStore } from 'redux';
 
@@ -22,6 +25,8 @@ import Login from './src/screens/Login';
 import Signup from './src/screens/Signup';
 import EventDetail from './src/screens/EventDetail';
 import EventFeed from './src/screens/EventFeed';
+import UserEvents from './src/screens/UserEvents';
+import History from './src/screens/History';
 
 // const store = createStore(reducers); 
 
@@ -34,11 +39,30 @@ import EventFeed from './src/screens/EventFeed';
 
 // createStackNavigator returns a component 
 // we have to store all our screens here that requires navagivation
-const AppNavigator = createStackNavigator({
-  // Login: Login,
-  // Signup: Signup,
-  EventFeed: EventFeed,
-  EventDetail: EventDetail,
+// const AppNavigator = createStackNavigator({
+//   // Login: Login,
+//   // Signup: Signup,
+//   EventFeed: EventFeed,
+//   EventDetail: EventDetail,
+// });
+
+const AppNavigator = createBottomTabNavigator({
+  EventFeed: {
+    screen: EventFeed, 
+    tabBarOptions: {
+      showLabel: false
+    },
+    navigationOptions: {
+      title: 'Home'
+    }
+  },
+  UserEvents: {
+    screen: UserEvents,
+    navigationOptions: {
+      title: 'Events'
+    }
+  },
+  History
 });
 
 const SignupNavigator = createStackNavigator({

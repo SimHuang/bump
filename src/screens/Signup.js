@@ -53,14 +53,14 @@ class Signup extends Component {
     }
 
     createAccount() {
-        if(this.validateForm()) {
-            const { email, password } = this.state;
-            firebase.auth().createUserWithEmailAndPassword(email, password)
-            .catch((message) => {
-                console.log('message' + message);
-                // this.setState({message: message});
-            });
-        }
+        // if(this.validateForm()) {
+        //     const { email, password } = this.state;
+        //     firebase.auth().createUserWithEmailAndPassword(email, password)
+        //     .catch((message) => {
+        //         console.log('message' + message);
+        //     });
+        // }
+        this.props.navigation.navigate('AppNavigator');
     }
 
     validateForm() {
