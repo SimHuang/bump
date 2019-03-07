@@ -3,7 +3,7 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from '../../config';
-import { Button, Header } from 'react-native-elements';
+import { Button, Header, Icon } from 'react-native-elements';
 
 class EventFeed extends Component {
 
@@ -17,11 +17,22 @@ class EventFeed extends Component {
             this.props.navigation.navigate('LoginNavigator');
         });
     }
+
+    goToCreateEventScreen() {
+        this.props.navigation.navigate('CreateEvent');
+    }
+
     render() {
         return (
             <View style={{backgroundColor: 'white', flex:1}}>
                 <Header
-                    centerComponent={{ text: 'Home', style: { color: '#fff' } }}
+                    centerComponent={{ text: 'Home', style: { color: '#000' } }}
+                    rightComponent={<Icon name="plus" 
+                                            type='font-awesome' 
+                                            onPress={() => this.goToCreateEventScreen()}
+                                            color="#000"
+                                            />}
+                    containerStyle={{ backgroundColor: '#fff' }}
                 />
                 <Text>Event FEED view</Text>
                 <Button 

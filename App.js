@@ -27,6 +27,9 @@ import EventDetail from './src/screens/EventDetail';
 import EventFeed from './src/screens/EventFeed';
 import UserEvents from './src/screens/UserEvents';
 import History from './src/screens/History';
+import UserProfile from './src/screens/UserProfile';
+import Setting from './src/screens/Setting';
+import CreateEvent from './src/screens/CreateEvent';
 
 // const store = createStore(reducers); 
 
@@ -62,7 +65,13 @@ const AppNavigator = createBottomTabNavigator({
       title: 'Events'
     }
   },
-  History
+  History,
+  UserProfile: {
+    screen: UserProfile,
+    navigationOptions: {
+      title: 'Profile'
+    }
+  }
 });
 
 const SignupNavigator = createStackNavigator({
@@ -74,7 +83,7 @@ const LoginNavigator = createStackNavigator({
 });
 
 const Main = createAppContainer(createSwitchNavigator(
-  {AppNavigator, SignupNavigator, LoginNavigator}, 
+  {AppNavigator, SignupNavigator, LoginNavigator, CreateEvent}, 
   {initialRouteName: 'LoginNavigator'})
 );
 
