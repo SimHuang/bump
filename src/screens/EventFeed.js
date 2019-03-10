@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from '../../config';
@@ -36,6 +36,12 @@ class EventFeed extends Component {
         this.props.navigation.navigate('CreateEvent');
     }
 
+    goSeeEventDetail() {
+        // Go to event detail page
+        console.log('go to event detail page')
+        this.props.navigation.navigate('EventDetail');
+    }
+
     renderEventCards() {
         const { events } = this.state;
         const eventIds = Object.keys(events);
@@ -43,9 +49,16 @@ class EventFeed extends Component {
 
         return eventDetails.map((event, index) => {
             return (
-                <Card title={event.eventTitle} key={eventIds[index]}>
-                    <Text>{event.eventDescription}</Text>
-                </Card>
+                <TouchableWithoutFeedback
+                    onPress={() => { this.goSeeEventDetail() }}
+                >
+                    <Card title={event.eventTitle} 
+                        key={eventIds[index]}>
+                        <View  >
+                            <Text>{event.eventDescription}</Text>
+                        </View>
+                    </Card>
+                </TouchableWithoutFeedback>
             );
         });
     }

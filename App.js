@@ -84,7 +84,7 @@ const LoginNavigator = createStackNavigator({
 });
 
 const Main = createAppContainer(createSwitchNavigator(
-  {AppNavigator, SignupNavigator, LoginNavigator, CreateEvent}, 
+  {AppNavigator, SignupNavigator, LoginNavigator, CreateEvent, EventDetail}, 
   {initialRouteName: 'LoginNavigator'})
 );
 
