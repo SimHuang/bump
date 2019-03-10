@@ -71,7 +71,8 @@ const AppNavigator = createBottomTabNavigator({
     navigationOptions: {
       title: 'Profile'
     }
-  }
+  },
+  Setting
 });
 
 const SignupNavigator = createStackNavigator({

@@ -35,9 +35,9 @@ class EventFeed extends Component {
                     containerStyle={{ backgroundColor: '#fff' }}
                 />
                 <Text>Event FEED view</Text>
-                <Button 
+                {/* <Button 
                     onPress={() => {this.logout()}}
-                    title="Logout"/>
+                    title="Logout"/> */}
             </View>
         )
     }

@@ -1,16 +1,28 @@
 import React from 'react';
 
 import { View, Text } from 'react-native';
-import { Header } from 'react-native-elements';
+import { Header, Button } from 'react-native-elements';
+
+import firebase from '@firebase/app';
+import { firebaseConfig } from '../../config';
 
 class Setting extends React.Component {
+
+  logout() {
+    firebase.auth().signOut().then(() => {
+      this.props.navigation.navigate('LoginNavigator');
+    });
+  }
+
   render() {
     return (
       <View style={{backgroundColor: 'white', flex:1}}>
         <Header
           centerComponent={{ text: 'Setting', style: { color: '#fff' } }}
         />
-        <Text>Setting</Text>
+        <Button 
+          title="Log Out"
+          onPress={() => this.logout()}/>
       </View>
     )
   }

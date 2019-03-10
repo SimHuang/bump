@@ -5,7 +5,8 @@ import { Input, Button, Header } from 'react-native-elements';
 
 import { firebaseConfig } from '../../config';
 import firebase from '@firebase/app';
-import '@firebase/auth'
+import '@firebase/auth';
+import '@firebase/database';
 
 class Signup extends Component {
     constructor(props) {
@@ -19,19 +20,22 @@ class Signup extends Component {
             "message": null
         }
         this.unsubscribe = null;
-
+        this.database = null;
     }
+
     componentDidMount() {
         console.log('you are in the sign up screen');
         //firebase.initializeApp(firebaseConfig);
+        this.database = firebase.database();
         this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
             if (user) {
-                console.log('user logged in');
-                user.updateProfile({
-                    firstName: this.state.firstName,
-                    lastName: this.state.lastName,
-                    fullName: this.state.firstName + this.state.lastName
-                });
+                console.log('user logged in laallalalla');
+                // user.updateProfile({
+                //     firstName: this.state.firstName,
+                //     lastName: this.state.lastName,
+                //     fullName: this.state.firstName + this.state.lastName
+                // });
+                this.writeUserToDB(user);
                 this.setState({message: 'user created'});
                 this.props.navigation.navigate('AppNavigator');
             } else {
@@ -46,21 +50,31 @@ class Signup extends Component {
         }
     }
 
+    writeUserToDB(user) {
+        const userInfo = this.state;
+        const userId = firebase.auth().currentUser.uid;
+        this.database.ref('/users/' + userId).set({
+            email: userInfo.email,
+            firstName: userInfo.firstName,
+            lastName: userInfo.lastName,
+            fullName: userInfo.firstName + userInfo.lastName
+        })
+    }
+
     loginOnpressHanlder(email, password) {
-        console.log('go to login screen');
         this.props.navigation.navigate('Login');
         this.setState({message: this.state.firstName});
     }
 
     createAccount() {
-        // if(this.validateForm()) {
-        //     const { email, password } = this.state;
-        //     firebase.auth().createUserWithEmailAndPassword(email, password)
-        //     .catch((message) => {
-        //         console.log('message' + message);
-        //     });
-        // }
-        this.props.navigation.navigate('AppNavigator');
+        if(this.validateForm()) {
+            const { email, password } = this.state;
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+            .catch((message) => {
+                console.log('message' + message);
+            });
+        }
+        // this.props.navigation.navigate('AppNavigator');
     }
 
     validateForm() {
@@ -89,7 +103,7 @@ class Signup extends Component {
             this.setState({message: 'Password does not match.'});
             return false;
         }
-        console.log('error craeting account');
+        // console.log('error craeting account');
         return true;
     }
 

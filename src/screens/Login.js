@@ -23,10 +23,15 @@ class Login extends Component {
         this.trackAuthenticateState();
     }
 
+    componentWillUnmount() {
+        if(this.unsubscribe) {
+            console.log('unsubscribe auth in login');
+            this.unsubscribe();
+        }
+    }
+
     signupOnPressHandler() {
-        console.log('money bunny');
         let { navigation } = this.props;
-        console.log('hello world')
         navigation.navigate('Signup');
     }
 
@@ -41,7 +46,7 @@ class Login extends Component {
     // Once user logs in we can do things such as go to activity screen
     trackAuthenticateState() {
         let { navigation } = this.props; 
-        firebase.auth().onAuthStateChanged(user => {
+        this.unsubscribe =  firebase.auth().onAuthStateChanged(user => {
             if(user) {
                 console.log('user logged in successfully');
                 navigation.navigate('EventFeed');
