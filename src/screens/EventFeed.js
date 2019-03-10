@@ -3,12 +3,26 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from '../../config';
-import { Button, Header, Icon } from 'react-native-elements';
+import { Card, Button, Header, Icon } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 
 class EventFeed extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLoading: true,
+            events: null
+        }
+        this.database = firebase.database();
+    }
 
     componentDidMount() {
         // firebase.initializeApp(firebaseConfig);
+        this.database.ref('/events').once('value')
+            .then(snapshot => {
+                console.log(snapshot.val());
+                this.setState({isLoading: false, events:snapshot.val()});
+            });
     }
 
     logout() {
@@ -22,7 +36,33 @@ class EventFeed extends Component {
         this.props.navigation.navigate('CreateEvent');
     }
 
+    renderEventCards() {
+        const { events } = this.state;
+        const eventIds = Object.keys(events);
+        const eventDetails = Object.values(events);
+
+        return eventDetails.map((event, index) => {
+            return (
+                <Card title={event.eventTitle} key={eventIds[index]}>
+                    <Text>{event.eventDescription}</Text>
+                </Card>
+            );
+        });
+    }
+
+    renderLoading() {
+        return (
+            <View>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
+
     render() {
+        if(this.state.isLoading) {
+            return this.renderLoading();
+        }
+
         return (
             <View style={{backgroundColor: 'white', flex:1}}>
                 <Header
@@ -34,10 +74,9 @@ class EventFeed extends Component {
                                             />}
                     containerStyle={{ backgroundColor: '#fff' }}
                 />
-                <Text>Event FEED view</Text>
-                {/* <Button 
-                    onPress={() => {this.logout()}}
-                    title="Logout"/> */}
+                <ScrollView>
+                    {this.renderEventCards()}
+                </ScrollView>
             </View>
         )
     }
