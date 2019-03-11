@@ -109,10 +109,10 @@ class UserEvents extends Component {
         }
 
         return (
-            <View style={{backgroundColor: '#F0ECC9', flex:1}}>
+            <View style={{backgroundColor: '#ECF2F6', flex:1}}>
                 <Header
                     centerComponent={{ text: '', style: { color: 'fff' } }}
-                    containerStyle={{ backgroundColor: '#022E2F' }}
+                    containerStyle={{ backgroundColor: '#001827' }}
                 />
                 <ScrollView contentContainerStyle = {styles.zeroMarginVert}>
                     {this.renderEventCards()}
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
         marginLeft: 0,
         marginRight: 0,
         marginBottom: 0,
-        backgroundColor: '#A7A37F'
+        backgroundColor: '#EA1A3A'
 
     }
 });
