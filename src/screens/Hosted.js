@@ -6,17 +6,17 @@ import firebase from '@firebase/app';
 import '@firebase/auth';
 import { firebaseConfig } from '../../config'
 
-class History extends Component {
+class Hosted extends Component {
     render() {
         return (
             <View style={{backgroundColor: 'white', flex:1}}>
                 <Header
-                    centerComponent={{ text: 'History', style: { color: '#fff' } }}
+                    centerComponent={{ text: 'Hosted', style: { color: '#fff' } }}
                 />
-                <Text>History</Text>
+                <Text>Hosted</Text>
             </View>
         )
     }
 }
 
-export default History
+export default Hosted

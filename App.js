@@ -26,7 +26,7 @@ import Signup from './src/screens/Signup';
 import EventDetail from './src/screens/EventDetail';
 import EventFeed from './src/screens/EventFeed';
 import UserEvents from './src/screens/UserEvents';
-import History from './src/screens/History';
+import Hosted from './src/screens/Hosted';
 import UserProfile from './src/screens/UserProfile';
 import Setting from './src/screens/Setting';
 import CreateEvent from './src/screens/CreateEvent';
@@ -62,10 +62,10 @@ const AppNavigator = createBottomTabNavigator({
   UserEvents: {
     screen: UserEvents,
     navigationOptions: {
-      title: 'Events'
+      title: 'Joined'
     }
   },
-  History,
+  Hosted,
   UserProfile: {
     screen: UserProfile,
     navigationOptions: {
