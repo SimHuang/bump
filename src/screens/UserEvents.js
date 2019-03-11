@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
+import {Platform, StyleSheet, Text, View, Alert, TouchableWithoutFeedback } from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from '@firebase/app';
 import '@firebase/auth';
@@ -32,6 +32,15 @@ class UserEvents extends Component {
         this.props.navigation.navigate('EventDetail');
     }
 
+    goToHomeScreen() {
+        // ET Go Home
+        this.props.navigation.navigate('EventFeed');
+    }
+
+    removeUserEvent(key) {
+        Alert.alert("User event has been removed Index:" + key);
+    }
+
     renderEventCards() {
         const { events } = this.state;
         const eventIds = Object.keys(events);
@@ -42,17 +51,16 @@ class UserEvents extends Component {
             party: require("../images/Party.png"),
             food: require("../images/Food.png"),
         }
-
-        var testIcon;
+        var selectedIcon;
 
         return eventDetails.map((event, index) => {
 
             switch (event.eventCategory)
             {
-                case 'Sports': testIcon = eventIcons.sports; break;
-                case 'Party': testIcon = eventIcons.party; break;
-                case 'Food': testIcon = eventIcons.food; break;
-                default: testIcon = eventIcons.food; break;
+                case 'Sports': selectedIcon = eventIcons.sports; break;
+                case 'Party': selectedIcon = eventIcons.party; break;
+                case 'Food': selectedIcon = eventIcons.food; break;
+                default: selectedIcon = eventIcons.food; break;
             }
 
             return (
@@ -60,32 +68,23 @@ class UserEvents extends Component {
                     onPress={() => { this.goSeeEventDetail() }}
                 >
                     <Card
-                        image = {testIcon}
+                        containerStyle={[styles.border]}
+                        image = {selectedIcon}
                         featuredTitle={event.eventTitle}
-                        featuredTitleStyle={styles.shadowText}
-                        containerStyle={[styles.border, styles.zeroPadding]}
-                        wrapperStyle = {styles.zeroMargin}
-                        imageWrapperStyle = {styles.zeroMargin}
                         key={eventIds[index]}>
                         <View>
-                            <Text>{'-' + event.eventDescription}</Text>
-                            <Text>{'-' + event.eventDescription}</Text>
-                            <Text>{'-' + event.eventDescription}</Text>
+                            <Text>{'Category: ' + event.eventCategory}</Text>
+                            <Text>{'User: ' + event.eventUser}</Text>
+                            <Text>{'Description: ' + event.eventDescription}</Text>
                         </View>
 
-                        <View style={[styles.container, styles.margin]}>
-                            {/* <View style={styles.buttonContainer}>
-                                <Button
-                                    icon={<Icon name='check-circle' color='#ffffff' />}
-                                    buttonStyle={styles.buttonStyle}
-                                    title={'Status'}
-                                />
-                            </View> */}
+                        <View style={[styles.container, styles.zeroMarginHor]}>
                             <View style={styles.buttonContainer}>
                                 <Button
+                                    buttonStyle={styles.button}
                                     icon={<Icon name="remove-circle" color='#ffffff' />}
-                                    buttonStyle={styles.buttonStyle}
                                     title={'Leave Event'}
+                                    onPress={() => { this.removeUserEvent(index) }}
                                 />
                             </View>
                         </View>
@@ -109,10 +108,17 @@ class UserEvents extends Component {
         }
 
         return (
-            <View style={{backgroundColor: '#ECF2F6', flex:1}}>
+            <View style={styles.background}>
                 <Header
+                    containerStyle={styles.header}
                     centerComponent={{ text: '', style: { color: 'fff' } }}
-                    containerStyle={{ backgroundColor: '#001827' }}
+                    leftComponent={<Icon name="settings" color = "#ffffff"/>}
+                    rightComponent={<Icon name="home" 
+                    type='font-awesome' 
+                    onPress={() => this.goToHomeScreen()}
+                    color="#ffffff"
+                    />}
+
                 />
                 <ScrollView contentContainerStyle = {styles.zeroMarginVert}>
                     {this.renderEventCards()}
@@ -123,6 +129,24 @@ class UserEvents extends Component {
 }
 
 const styles = StyleSheet.create({
+
+    header: {
+        backgroundColor: '#001827'
+    },
+
+    background: {
+        backgroundColor: '#ECF2F6',
+        flex: 1
+    },
+
+    button: {
+        borderRadius: 0,
+        marginLeft: 0,
+        marginRight: 0,
+        marginBottom: 0,
+        backgroundColor: '#EA1A3A'
+    },
+
     container: {
         flex: 1,
         flexDirection: 'row',
@@ -131,17 +155,7 @@ const styles = StyleSheet.create({
 
     },
 
-    shadowText: {
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
-        textShadowRadius: 10,
-    },
-
-    zeroPadding: {
-        padding: 0
-    },
-
-    margin: {
+    zeroMarginHor: {
         marginLeft: 0,
         marginRight: 0,
     },
@@ -168,15 +182,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'flex-end',
     },
-
-    buttonStyle: {
-        borderRadius: 0,
-        marginLeft: 0,
-        marginRight: 0,
-        marginBottom: 0,
-        backgroundColor: '#EA1A3A'
-
-    }
 });
 
 export default UserEvents
