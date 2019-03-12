@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableWithoutFeedback } from 'react-native';
+import { Platform, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from '../../config';
 import { Card, Button, Header, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+
+import GlobalContext, { EventContext } from '../context/GlobalContext';
 
 class EventFeed extends Component {
     constructor(props) {
@@ -14,14 +16,16 @@ class EventFeed extends Component {
             events: null
         }
         this.database = firebase.database();
+        // this.myContext = null;
     }
 
     componentDidMount() {
+        let value = this.context;
         // firebase.initializeApp(firebaseConfig);
         this.database.ref('/events').once('value')
             .then(snapshot => {
-                console.log(snapshot.val());
                 this.setState({isLoading: false, events:snapshot.val()});
+                value.setCurrentEvents(snapshot.val());
             });
     }
 
@@ -36,21 +40,24 @@ class EventFeed extends Component {
         this.props.navigation.navigate('CreateEvent');
     }
 
-    goSeeEventDetail() {
+    goSeeEventDetail(event, value) {
         // Go to event detail page
-        console.log('go to event detail page')
-        this.props.navigation.navigate('EventDetail');
+        console.log('The event you selected  ' + event);
+        value.setSelectedEvent(event, () => {
+            this.props.navigation.navigate('EventDetail');
+        });
     }
 
-    renderEventCards() {
+    renderEventCards(value) {
         const { events } = this.state;
         const eventIds = Object.keys(events);
         const eventDetails = Object.values(events);
 
         return eventDetails.map((event, index) => {
             return (
-                <TouchableWithoutFeedback
-                    onPress={() => { this.goSeeEventDetail() }}
+                <TouchableHighlight
+                    onPress={() => { this.goSeeEventDetail(eventIds[index], value) }}
+                    underlayColor="white"
                 >
                     <Card title={event.eventTitle} 
                         key={eventIds[index]}>
@@ -58,7 +65,7 @@ class EventFeed extends Component {
                             <Text>{event.eventDescription}</Text>
                         </View>
                     </Card>
-                </TouchableWithoutFeedback>
+                </TouchableHighlight>
             );
         });
     }
@@ -71,6 +78,10 @@ class EventFeed extends Component {
         );
     }
 
+    setUserSelectedEvent() {
+
+    }
+
     render() {
         if(this.state.isLoading) {
             return this.renderLoading();
@@ -78,21 +89,32 @@ class EventFeed extends Component {
 
         return (
             <View style={{backgroundColor: 'white', flex:1}}>
-                <Header
-                    centerComponent={{ text: 'Home', style: { color: '#000' } }}
-                    rightComponent={<Icon name="plus" 
-                                            type='font-awesome' 
-                                            onPress={() => this.goToCreateEventScreen()}
-                                            color="#000"
-                                            />}
-                    containerStyle={{ backgroundColor: '#fff' }}
-                />
-                <ScrollView>
-                    {this.renderEventCards()}
-                </ScrollView>
+                <EventContext.Consumer>
+                    {(value) => {
+                        console.log(value);
+                        return (
+                            <React.Fragment>
+                                <Header
+                                    centerComponent={{ text: 'Home', style: { color: '#000' } }}
+                                    rightComponent={<Icon name="plus" 
+                                    type='font-awesome' 
+                                    onPress={() => this.goToCreateEventScreen()}
+                                    color="#000"
+                                />}
+                                containerStyle={{ backgroundColor: '#fff' }}
+                                />
+                                <ScrollView>
+                                    {this.renderEventCards(value)}
+                                </ScrollView>
+                            </React.Fragment>
+                        )}
+                    }
+                </EventContext.Consumer>
             </View>
         )
     }
 }
+
+EventFeed.contextType = EventContext;
 
 export default EventFeed
