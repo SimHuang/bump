@@ -30,6 +30,7 @@ import Hosted from './src/screens/Hosted';
 import UserProfile from './src/screens/UserProfile';
 import Setting from './src/screens/Setting';
 import CreateEvent from './src/screens/CreateEvent';
+import GlobalContext from './src/context/GlobalContext';
 
 // const store = createStore(reducers); 
 
@@ -99,7 +100,9 @@ class App extends Component<Props> {
   
   render() {
     return (
-      <Main />
+      <GlobalContext>
+        <Main />
+      </GlobalContext>
     );
   }
 }
