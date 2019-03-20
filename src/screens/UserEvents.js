@@ -137,7 +137,6 @@ class UserEvents extends Component {
                     onPress={() => this.goToHomeScreen()}
                     color="#ffffff"
                     />}
-
                 />
                 <ScrollView contentContainerStyle = {styles.zeroMarginVert}>
                     {this.renderEventCards()}
