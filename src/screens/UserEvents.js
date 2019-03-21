@@ -19,7 +19,6 @@ class UserEvents extends Component {
     }
 
     componentDidMount() {
-        // firebase.initializeApp(firebaseConfig);
         this.database.ref('/events').once('value')
             .then(snapshot => {
                 console.log(snapshot.val());
@@ -29,13 +28,13 @@ class UserEvents extends Component {
         const userID = firebase.auth().currentUser.uid;
         this.database.ref('/users/' + userID).once('value')
             .then(snapshot => {
-                if(snapshot) {
+                if(snapshot.exists()) {
                     const userObject = snapshot.val();
                     this.setState({
                         userJoinedEvents: userObject.currentEvents
                     });
                 }
-            });
+            }).catch((error) => {});
     }
 
     goSeeEventDetail() {
@@ -54,10 +53,18 @@ class UserEvents extends Component {
         firebase.database().ref('/users/' + userID + '/currentEvents').child(key).remove();
         delete this.state.userJoinedEvents[key];
         this.setState({ userJoinedEvents: this.state.userJoinedEvents});
-        //Alert.alert("User event has been removed Index:" + key);
     }
 
     renderEventCards() {
+
+        if(!this.state.userJoinedEvents)
+        {
+            return (
+                <View>
+                    <Text>{"Try joining an event!"}</Text>
+                </View>
+            )
+        }
 
         const { events } = this.state;
         const { userJoinedEvents } = this.state;

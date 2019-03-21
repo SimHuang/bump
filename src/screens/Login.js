@@ -36,7 +36,7 @@ class Login extends Component {
     }
 
     authenticate(email, password) {
-        firebase.auth().signInWithEmailAndPassword("simhuang@yahoo.com", "expertnerd123")
+        firebase.auth().signInWithEmailAndPassword(email, password)
         .catch((error) => {
            console.log(error);
         });
@@ -61,12 +61,16 @@ class Login extends Component {
                 <Text>Login page</Text>
                 <Input
                     placeholder="Username"
+                    value={this.state.email}
+                    onChangeText={(email) => this.setState({email})}
                 />
                 <Input
                     placeholder="Password"
+                    value={this.state.password}
+                    onChangeText={(password) => this.setState({password})}
                 />
                 <Button 
-                    onPress={()=> this.authenticate()}
+                    onPress={()=> this.authenticate(this.state.email, this.state.password)}
                     style={styles.button}
                     title="Login"/>
                 <Button

@@ -13,7 +13,7 @@ class Hosted extends Component {
         this.state = {
             isLoading: true,
             events:null,
-            userJoinedEvents: {},
+            userPostedEvents: {},
         }
         this.database = firebase.database();
     }
@@ -28,10 +28,10 @@ class Hosted extends Component {
         const userID = firebase.auth().currentUser.uid;
         this.database.ref('/users/' + userID).once('value')
             .then(snapshot => {
-                if(snapshot) {
+                if(snapshot.exists()) {
                     const userObject = snapshot.val();
                     this.setState({
-                        userJoinedEvents: userObject.postedEvents
+                        userPostedEvents: userObject.postedEvents
                     });
                 }
             });
@@ -51,16 +51,25 @@ class Hosted extends Component {
     removeUserEvent(key) {
         const userID = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/' + userID + '/postedEvents').child(key).remove();
-        delete this.state.userJoinedEvents[key];
-        this.setState({ userJoinedEvents: this.state.userJoinedEvents});
+        delete this.state.userPostedEvents[key];
+        this.setState({ userPostedEvents: this.state.userPostedEvents});
     }
 
     renderEventCards() {
 
+        if(!this.state.userPostedEvents)
+        {
+            return (
+                <View>
+                    <Text>{"Try posting an event!"}</Text>
+                </View>
+            )
+        }
+
         const { events } = this.state;
-        const { userJoinedEvents } = this.state;
-        const uEventIds = Object.values(userJoinedEvents);
-        const uEventKeys = Object.keys(userJoinedEvents);
+        const { userPostedEvents } = this.state;
+        const uEventIds = Object.values(userPostedEvents);
+        const uEventKeys = Object.keys(userPostedEvents);
         const eventIcons =
         {
             sports: require("../images/Sports.png"),
