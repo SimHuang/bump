@@ -12,18 +12,29 @@ class UserEvents extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            events:null
+            events:null,
+            userJoinedEvents: {},
         }
         this.database = firebase.database();
     }
 
     componentDidMount() {
-        // firebase.initializeApp(firebaseConfig);
         this.database.ref('/events').once('value')
             .then(snapshot => {
                 console.log(snapshot.val());
                 this.setState({isLoading: false, events:snapshot.val()});
             });
+
+        const userID = firebase.auth().currentUser.uid;
+        this.database.ref('/users/' + userID).once('value')
+            .then(snapshot => {
+                if(snapshot.exists()) {
+                    const userObject = snapshot.val();
+                    this.setState({
+                        userJoinedEvents: userObject.currentEvents
+                    });
+                }
+            }).catch((error) => {});
     }
 
     goSeeEventDetail() {
@@ -38,13 +49,27 @@ class UserEvents extends Component {
     }
 
     removeUserEvent(key) {
-        Alert.alert("User event has been removed Index:" + key);
+        const userID = firebase.auth().currentUser.uid;
+        firebase.database().ref('/users/' + userID + '/currentEvents').child(key).remove();
+        delete this.state.userJoinedEvents[key];
+        this.setState({ userJoinedEvents: this.state.userJoinedEvents});
     }
 
     renderEventCards() {
+
+        if(!this.state.userJoinedEvents)
+        {
+            return (
+                <View>
+                    <Text>{"Try joining an event!"}</Text>
+                </View>
+            )
+        }
+
         const { events } = this.state;
-        const eventIds = Object.keys(events);
-        const eventDetails = Object.values(events);
+        const { userJoinedEvents } = this.state;
+        const uEventIds = Object.values(userJoinedEvents);
+        const uEventKeys = Object.keys(userJoinedEvents);
         const eventIcons =
         {
             sports: require("../images/Sports.png"),
@@ -52,9 +77,11 @@ class UserEvents extends Component {
             food: require("../images/Food.png"),
         }
         var selectedIcon;
+        var event;
 
-        return eventDetails.map((event, index) => {
+        return uEventIds.map((uEventId, index) => {
 
+            event = events[uEventId];
             switch (event.eventCategory)
             {
                 case 'Sports': selectedIcon = eventIcons.sports; break;
@@ -70,8 +97,7 @@ class UserEvents extends Component {
                     <Card
                         containerStyle={[styles.border]}
                         image = {selectedIcon}
-                        featuredTitle={event.eventTitle}
-                        key={eventIds[index]}>
+                        featuredTitle={event.eventTitle}>
                         <View>
                             <Text>{'Category: ' + event.eventCategory}</Text>
                             <Text>{'User: ' + event.eventUser}</Text>
@@ -84,7 +110,7 @@ class UserEvents extends Component {
                                     buttonStyle={styles.button}
                                     icon={<Icon name="remove-circle" color='#ffffff' />}
                                     title={'Leave Event'}
-                                    onPress={() => { this.removeUserEvent(index) }}
+                                    onPress={() => { this.removeUserEvent(uEventKeys[index]) }}
                                 />
                             </View>
                         </View>
@@ -118,7 +144,6 @@ class UserEvents extends Component {
                     onPress={() => this.goToHomeScreen()}
                     color="#ffffff"
                     />}
-
                 />
                 <ScrollView contentContainerStyle = {styles.zeroMarginVert}>
                     {this.renderEventCards()}
