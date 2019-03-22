@@ -29,7 +29,8 @@ class CreateEvent extends React.Component {
     firebase.database().ref('/events/' + newPostKey).set({
       user: userId,
       eventTitle: this.state.eventTitle,
-      eventDescription: this.state.eventDescription
+      eventDescription: this.state.eventDescription,
+      dateCreated: new Date().getTime()
     }, error => {
       if(error) {
         this.setState({message: 'Error creating event'});
