@@ -4,8 +4,9 @@ import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from '@firebase/app';
 import '@firebase/auth';
 import { firebaseConfig } from '../../config';
-import { Card, Button, Header, Icon } from 'react-native-elements';
+import { Button, Header, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 
 class Hosted extends Component {
     constructor(props) {
@@ -94,28 +95,33 @@ class Hosted extends Component {
                 <TouchableWithoutFeedback
                     onPress={() => { this.goSeeEventDetail() }}
                 >
-                    <Card
-                        containerStyle={[styles.border]}
-                        image = {selectedIcon}
-                        featuredTitle={event.eventTitle}>
-                        <View>
-                            <Text>{'Category: ' + event.eventCategory}</Text>
-                            <Text>{'User: ' + event.eventUser}</Text>
-                            <Text>{'Description: ' + event.eventDescription}</Text>
-                        </View>
-
-                        <View style={[styles.container, styles.zeroMarginHor]}>
-                            <View style={styles.buttonContainer}>
-                                <Button
-                                    buttonStyle={styles.button}
-                                    icon={<Icon name="remove-circle" color='#ffffff' />}
-                                    title={'Edit Event'}
-                                    onPress={() => { this.removeUserEvent(uEventKeys[index]) }}
-                                />
-                            </View>
-                        </View>
+                    <Card>
+                        <CardImage 
+                            source={selectedIcon}
+                            title={event.eventCategory}
+                        />
+                        <CardTitle 
+                            title={event.eventTitle}
+                            subtitle="Terence Lau"
+                        />
+                        <CardContent text= {event.eventDescription} />
+                        <CardAction 
+                            separator={true} 
+                            inColumn={false}>
+                            <CardButton
+                            onPress={() => {this.removeUserEvent(uEventKeys[index])}}
+                            title="Edit"
+                            color="orange"
+                            />
+                            <CardButton
+                            onPress={() => {this.removeUserEvent(uEventKeys[index])}}
+                            title="Leave"
+                            color="orange"
+                            />
+                        </CardAction>
                     </Card>
                 </TouchableWithoutFeedback>
+
             );
         });
     }
@@ -156,7 +162,7 @@ class Hosted extends Component {
 const styles = StyleSheet.create({
 
     header: {
-        backgroundColor: '#001827'
+        backgroundColor: '#1e9e88'
     },
 
     background: {
