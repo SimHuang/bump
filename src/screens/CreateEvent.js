@@ -31,6 +31,7 @@ class CreateEvent extends React.Component {
       user: userId,
       eventTitle: this.state.eventTitle,
       eventDescription: this.state.eventDescription,
+      dateCreated: new Date().getTime(),
       eventCategory: this.state.eventCategory
     }, error => {
       if(error) {

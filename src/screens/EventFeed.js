@@ -29,6 +29,11 @@ class EventFeed extends Component {
             });
     }
 
+    componentWillUnmount() {
+        // when the user leave this page, let's determine if any events should be added to history
+        
+    }
+
     logout() {
         firebase.auth().signOut().then(() => {
             console.log("user signed out");

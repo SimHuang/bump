@@ -9,6 +9,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import { Icon } from 'react-native-elements';
 import { createSwitchNavigator, 
         createStackNavigator, 
         createBottomTabNavigator, 
@@ -73,7 +74,19 @@ const AppNavigator = createBottomTabNavigator({
       title: 'Profile'
     }
   },
-  Setting
+  Setting: {
+    screen: Setting,
+    navigationOptions: {
+      tarBarIcon: () => {
+        <Icon name="cog" type="font-awesome" size={20}/>
+      }
+    }
+  }
+},
+{
+  tabBarOptions: {
+    showIcon: true
+  }
 });
 
 const SignupNavigator = createStackNavigator({
