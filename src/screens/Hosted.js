@@ -121,7 +121,6 @@ class Hosted extends Component {
                         </CardAction>
                     </Card>
                 </TouchableWithoutFeedback>
-
             );
         });
     }
