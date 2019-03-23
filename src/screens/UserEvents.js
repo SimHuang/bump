@@ -82,41 +82,51 @@ class UserEvents extends Component {
 
         return uEventIds.map((uEventId, index) => {
 
-            event = events[uEventId];
-            switch (event.eventCategory)
+            if (!events[uEventId])
             {
-                case 'Sports': selectedIcon = eventIcons.sports; break;
-                case 'Party': selectedIcon = eventIcons.party; break;
-                case 'Food': selectedIcon = eventIcons.food; break;
-                default: selectedIcon = eventIcons.food; break;
+                //Remove the entry and move on
+                this.removeUserEvent(uEventKeys[index]);
+                return;
             }
+            else
+            {
+                //Valid entry, proceed to display
+                event = events[uEventId];
+                switch (event.eventCategory)
+                {
+                    case 'Sports': selectedIcon = eventIcons.sports; break;
+                    case 'Party': selectedIcon = eventIcons.party; break;
+                    case 'Food': selectedIcon = eventIcons.food; break;
+                    default: selectedIcon = eventIcons.food; break;
+                }
 
-            return (
-                <TouchableWithoutFeedback
-                    onPress={() => { this.goSeeEventDetail() }}
-                >
-                    <Card>
-                        <CardImage 
-                            source={selectedIcon}
-                            title={event.eventCategory}
-                        />
-                        <CardTitle 
-                            title={event.eventTitle}
-                            subtitle="Terence Lau"
-                        />
-                        <CardContent text= {event.eventDescription} />
-                        <CardAction 
-                            separator={true} 
-                            inColumn={false}>
-                            <CardButton
-                            onPress={() => {this.removeUserEvent(uEventKeys[index])}}
-                            title="Leave"
-                            color="orange"
+                return (
+                    <TouchableWithoutFeedback
+                        onPress={() => { this.goSeeEventDetail() }}
+                    >
+                        <Card>
+                            <CardImage 
+                                source={selectedIcon}
+                                title={event.eventCategory}
                             />
-                        </CardAction>
-                    </Card>
-                </TouchableWithoutFeedback>
-            );
+                            <CardTitle 
+                                title={event.eventTitle}
+                                subtitle="Terence Lau"
+                            />
+                            <CardContent text= {event.eventDescription} />
+                            <CardAction 
+                                separator={true} 
+                                inColumn={false}>
+                                <CardButton
+                                onPress={() => {this.removeUserEvent(uEventKeys[index])}}
+                                title="Leave"
+                                color="orange"
+                                />
+                            </CardAction>
+                        </Card>
+                    </TouchableWithoutFeedback>
+                );
+            }
         });
     }
 
@@ -129,6 +139,7 @@ class UserEvents extends Component {
     }
 
     render() {
+
         if(this.state.isLoading) {
             return this.renderLoading();
         }
