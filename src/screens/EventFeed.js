@@ -71,6 +71,7 @@ class EventFeed extends Component {
     }
 
     goSeeEventDetail(event, value) {
+        // let value = this.context;
         // Go to event detail page
         value.setSelectedEvent(event, () => {
             this.props.navigation.navigate('EventDetail');
@@ -100,7 +101,7 @@ class EventFeed extends Component {
         });
     }
 
-    renderFilteredEvents() {
+    renderFilteredEvents(value) {
         const { events } = this.state;
         const eventIds = Object.keys(events);
         const eventDetails = Object.values(events);
