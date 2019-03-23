@@ -28,14 +28,9 @@ class UserProfile extends React.Component {
   }
 
   saveUserProfile() {
-    let updates = {};
     const userId = firebase.auth().currentUser.uid;
-    const updateData = {
-      firstName: this.state.firstName,
-      lastName: this.state.lastName
-    }
-    updates['/users/' + userId] = updateData;
-    this.database.ref().update(updates);
+    this.database.ref('/users/' + userId).update({firstName: this.state.firstName,
+                                                  lastName: this.state.lastName});
   }
 
   render() {

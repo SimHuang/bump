@@ -4,8 +4,9 @@ import firebase from '@firebase/app';
 import '@firebase/auth';
 import '@firebase/database';
 
-import { View, Text, Picker } from 'react-native';
+import { Alert, TouchableOpacity, View, Text, Picker } from 'react-native';
 import { Header, Icon, Input, Button } from 'react-native-elements';
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 class CreateEvent extends React.Component {
   constructor(props) {
@@ -14,15 +15,41 @@ class CreateEvent extends React.Component {
       eventTitle: '',
       eventDescription: '',
       eventCategory: 'Sports',
-      message: ''
+      eventDate: '',
+      eventAvailableSpots: 1,
+      message: '',
+      isDateTimePickerVisible: false
     }
   }
-
   componentDidMount() {
     if(!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig)
     }
   }
+
+  validateNumericInput(text)
+  {
+    let newText = '';
+    let numbers = '0123456789';
+
+    for (var i=0; i < text.length; i++) {
+        if(numbers.indexOf(text[i]) > -1 ) {
+            newText = newText + text[i];
+        }
+        else {
+            // your call back function
+            alert("please enter numbers only");
+        }
+    }
+    this.setState({ eventAvailableSpots: newText });
+  }
+
+  showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+  hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+  handleDatePicked = (date) => {
+    this.setState({eventDate: date.toString()});
+    this.hideDateTimePicker();
+  };
 
   createEvent() {
     const newPostKey = firebase.database().ref().child('posts').push().key;
@@ -31,8 +58,10 @@ class CreateEvent extends React.Component {
       user: userId,
       eventTitle: this.state.eventTitle,
       eventDescription: this.state.eventDescription,
+      eventCategory: this.state.eventCategory,
+      eventDate: this.state.eventDate,
+      eventAvailableSpots: this.state.eventAvailableSpots,
       dateCreated: new Date().getTime(),
-      eventCategory: this.state.eventCategory
     }, error => {
       if(error) {
         this.setState({message: 'Error creating event'});
@@ -72,9 +101,16 @@ class CreateEvent extends React.Component {
           value={this.state.eventDescription}
           onChangeText={eventDescription => this.setState({eventDescription})} />
 
+        <Input
+          keyboardType='numeric'
+          placeholder="Available Spots"
+          value={this.state.eventAvailableSpots}
+          maxLength={5}
+          onChangeText={(text)=>this.validateNumericInput(text)} />
+
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={{flex:.5}}>
-            <Text>{'Event Category:'}</Text>
+            <Text>{'   Select Category:'}</Text>
           </View>
           <View style={{flex:.2}}>
             <Picker
@@ -89,6 +125,18 @@ class CreateEvent extends React.Component {
               <Picker.Item label="Food" value="Food" />
             </Picker>
           </View>
+        </View>
+
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Select Time"
+            onPress={this.showDateTimePicker} />
+          <DateTimePicker
+            mode="datetime"
+            isVisible={this.state.isDateTimePickerVisible}
+            onConfirm={this.handleDatePicked}
+            onCancel={this.hideDateTimePicker}
+          />
         </View>
 
         <Button
