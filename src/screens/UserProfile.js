@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from '@firebase/app';
 
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Header, Image, Button, Input } from 'react-native-elements';
 
 class UserProfile extends React.Component {
@@ -37,6 +37,7 @@ class UserProfile extends React.Component {
     return (
       <View style={{backgroundColor: 'white', flex:1}}>
         <Header
+          containerStyle={styles.header}
           centerComponent={{ text: 'profile', style: { color: '#fff' } }}
         />
         <Image/>
@@ -59,5 +60,11 @@ class UserProfile extends React.Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  header: {
+    backgroundColor: '#1e9e88'
+  }
+});
 
 export default UserProfile
