@@ -137,12 +137,12 @@ class UserEvents extends Component {
             <View style={styles.background}>
                 <Header
                     containerStyle={styles.header}
-                    centerComponent={{ text: '', style: { color: 'fff' } }}
+                    centerComponent={{ text: '' }}
                     leftComponent={<Icon name="settings" color = "#ffffff"/>}
                     rightComponent={<Icon name="home" 
-                    type='font-awesome' 
-                    onPress={() => this.goToHomeScreen()}
-                    color="#ffffff"
+                        type='font-awesome' 
+                        onPress={() => this.goToHomeScreen()}
+                        color="#ffffff"
                     />}
                 />
                 <ScrollView contentContainerStyle = {styles.zeroMarginVert}>
@@ -164,49 +164,11 @@ const styles = StyleSheet.create({
         flex: 1
     },
 
-    button: {
-        borderRadius: 0,
-        marginLeft: 0,
-        marginRight: 0,
-        marginBottom: 0,
-        backgroundColor: '#EA1A3A'
-    },
-
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        justifyContent: 'space-between',
-
-    },
-
-    zeroMarginHor: {
-        marginLeft: 0,
-        marginRight: 0,
-    },
-
     zeroMarginVert: {
         marginTop: 0,
         marginBottom: 0
     },
 
-    zeroMargin: {
-        marginTop: 0,
-        marginBottom: 0,
-        marginLeft: 0,
-        marginRight: 0
-    },
-
-    border: {
-        borderRadius: 2,
-        borderWidth: 2,
-        borderColor: '#036482'
-    },
-
-    buttonContainer: {
-        flex: 1,
-        alignItems: 'flex-end',
-    },
 });
 
 export default UserEvents

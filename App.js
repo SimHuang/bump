@@ -31,6 +31,7 @@ import Hosted from './src/screens/Hosted';
 import UserProfile from './src/screens/UserProfile';
 import Setting from './src/screens/Setting';
 import CreateEvent from './src/screens/CreateEvent';
+import EditEvent from './src/screens/EditEvent';
 import GlobalContext from './src/context/GlobalContext';
 
 // const store = createStore(reducers); 
@@ -98,7 +99,7 @@ const LoginNavigator = createStackNavigator({
 });
 
 const Main = createAppContainer(createSwitchNavigator(
-  {AppNavigator, SignupNavigator, LoginNavigator, CreateEvent, EventDetail}, 
+  {AppNavigator, SignupNavigator, LoginNavigator, CreateEvent, EditEvent, EventDetail}, 
   {initialRouteName: 'LoginNavigator'})
 );
 
@@ -108,6 +109,7 @@ class App extends Component<Props> {
     if (!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig);
     }
+    console.disableYellowBox = true;
   }
 
   

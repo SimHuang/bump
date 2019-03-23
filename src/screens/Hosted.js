@@ -49,6 +49,11 @@ class Hosted extends Component {
         this.props.navigation.navigate('EventFeed');
     }
 
+    goEditEvent(key) {
+        //Go to create event page to edit event
+        this.props.navigation.navigate('EditEvent', {eventID: key});
+    }
+
     removeUserEvent(key) {
         const userID = firebase.auth().currentUser.uid;
         firebase.database().ref('/users/' + userID + '/postedEvents').child(key).remove();
@@ -109,13 +114,13 @@ class Hosted extends Component {
                             separator={true} 
                             inColumn={false}>
                             <CardButton
-                            onPress={() => {this.removeUserEvent(uEventKeys[index])}}
+                            onPress={() => {this.goEditEvent(uEventIds[index])}}
                             title="Edit"
                             color="orange"
                             />
                             <CardButton
                             onPress={() => {this.removeUserEvent(uEventKeys[index])}}
-                            title="Leave"
+                            title="Cancel"
                             color="orange"
                             />
                         </CardAction>
@@ -142,7 +147,7 @@ class Hosted extends Component {
             <View style={styles.background}>
                 <Header
                     containerStyle={styles.header}
-                    centerComponent={{ text: '', style: { color: 'fff' } }}
+                    centerComponent={{ text: ''}}
                     leftComponent={<Icon name="settings" color = "#ffffff"/>}
                     rightComponent={<Icon name="home" 
                     type='font-awesome' 

@@ -4,66 +4,82 @@ import firebase from '@firebase/app';
 import '@firebase/auth';
 import '@firebase/database';
 
-import { View, Text, Picker } from 'react-native';
+import { StyleSheet, Alert, View, Text, Picker } from 'react-native';
 import { Header, Icon, Input, Button } from 'react-native-elements';
 
-class CreateEvent extends React.Component {
+class EditEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       eventTitle: '',
       eventDescription: '',
       eventCategory: 'Sports',
-      message: ''
+      message: '',
+      eventID: ''
     }
+    this.database = firebase.database();
   }
 
   componentDidMount() {
     if(!firebase.apps.length) {
       firebase.initializeApp(firebaseConfig)
     }
+    const eId = this.props.navigation.getParam('eventID');
+    this.setState({eventID: eId});
+    this.database.ref('/events/' + eId).once('value')
+    .then(snapshot =>{
+        if(snapshot.exists()){
+            const userObject = snapshot.val();
+            this.setState({
+                eventTitle: userObject.eventTitle,
+                eventDescription: userObject.eventDescription,
+                eventCategory: userObject.eventCategory
+            });
+        }
+    });
   }
 
-  createEvent() {
-    const newPostKey = firebase.database().ref().child('posts').push().key;
-    const userId = firebase.auth().currentUser.uid;
-    firebase.database().ref('/events/' + newPostKey).set({
-      user: userId,
+  goToHomeScreen() {
+    // ET Go Home
+    this.props.navigation.navigate('EventFeed');
+}
+
+  EditEvent() {
+    const key = this.state.eventID;
+    firebase.database().ref('/events/' + key).update({
       eventTitle: this.state.eventTitle,
       eventDescription: this.state.eventDescription,
-      dateCreated: new Date().getTime(),
       eventCategory: this.state.eventCategory
     }, error => {
       if(error) {
-        this.setState({message: 'Error creating event'});
+        this.setState({message: 'Error editing event'});
       } else {
-        this.setState({message: 'Event created Successfully'});
+        this.setState({message: 'Event edited Successfully'});
       }
       setTimeout(() => {
-        this.props.navigation.navigate('EventFeed');
+        this.props.navigation.navigate('Hosted');
       }, 2000);
-    });
-
-    /*TL TODO Review*/
-    firebase.database().ref('/users/' + userId + '/postedEvents').push().set(newPostKey, error => {
-        setTimeout(()=> {
-          this.props.navigation.navigate('EventFeed');
-        }, 1000);
     });
   }
 
   render() {
+
     return (
       <View style={{backgroundColor: 'white', flex:1}}>
         <Header
-          leftComponent={<Icon name="angle-left" 
-                              type="font-awesome" 
-                              onPress={() => this.props.navigation.navigate('AppNavigator')}/>}
-          centerComponent={{ text: 'CreateEvent', style: { color: '#fff' } }}
+            containerStyle={styles.header}
+            leftComponent={<Icon name="angle-left" 
+                                type="font-awesome" 
+                                onPress={() => this.props.navigation.navigate('AppNavigator')}/>}
+            rightComponent={<Icon name="home" 
+                                type='font-awesome' 
+                                onPress={() => this.goToHomeScreen()}
+                                color="#ffffff"/>}
         />
 
         <Input
           placeholder="Event Title" 
+          leftIcon={{ type: 'font-awesome', name: 'chevron-left' }}
           value={this.state.eventTitle}
           onChangeText={(eventTitle) => this.setState({eventTitle})}/>
 
@@ -92,12 +108,20 @@ class CreateEvent extends React.Component {
         </View>
 
         <Button
-          title="Create Event" 
-          onPress={() => this.createEvent()} />
+          color="orange"
+          title="Edit Event"
+          onPress={() => this.EditEvent()} />
         <Text>{this.state.message}</Text>
       </View>
     )
   }
 }
 
-export default CreateEvent
+const styles = StyleSheet.create({
+
+    header: {
+        backgroundColor: '#1e9e88'
+    }
+});
+
+export default EditEvent
