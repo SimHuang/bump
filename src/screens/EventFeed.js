@@ -32,16 +32,17 @@ class EventFeed extends Component {
             .then(snapshot => {
                 this.setState({events:snapshot.val()});
                 value.setCurrentEvents(snapshot.val());
-            });
 
-        //get user info
-        this.database.ref('/users/' + userID).once('value')
-            .then(snapshot => {
-                value.setFilter(snapshot.val().filter);
-                this.setState({isLoading: false, user:snapshot.val(), filter: snapshot.val().filter});
-                // value.setCurrentEvents(snapshot.val());
-            });
+                //get user info
+                this.database.ref('/users/' + userID).once('value')
+                .then(snapshot => {
+                    value.setFilter(snapshot.val().filter);
+                    this.setState({isLoading: false, user:snapshot.val(), filter: snapshot.val().filter});
+                    // value.setCurrentEvents(snapshot.val());
+                });
 
+            });
+        
         //add listener for category change
         this.database.ref('/users/' + userID).on('child_changed', (data) => {
             this.setState({filter: data.val()});
