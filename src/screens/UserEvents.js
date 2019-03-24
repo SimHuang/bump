@@ -180,7 +180,6 @@ class UserEvents extends Component {
                                 <Header
                                     containerStyle={styles.header}
                                     centerComponent={{ text: ''}}
-                                    leftComponent={<Icon name="settings" color = "#ffffff"/>}
                                     rightComponent={<Icon name="home"
                                         type='font-awesome'
                                         onPress={() => this.goToHomeScreen()}

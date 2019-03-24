@@ -96,7 +96,8 @@ const AppNavigator = createBottomTabNavigator({
 {
   tabBarOptions: {
     showIcon: true,
-    activeTintColor: "#1e9e88"
+    activeTintColor: "#1e9e88",
+    activeBackgroundColor: "#ECF2F6"
   }
 });
 
