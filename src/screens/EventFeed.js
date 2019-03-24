@@ -148,7 +148,7 @@ class EventFeed extends Component {
                     <Card>
                         <CardImage 
                             source={selectedIcon}
-                            title={event.eventCategory}
+                            title={event.eventLocation}
                         />
                         <CardTitle 
                             avatarSource={require('../images/User.png')}
@@ -217,7 +217,7 @@ class EventFeed extends Component {
                     <Card>
                         <CardImage 
                             source={selectedIcon}
-                            title={event.eventCategory}
+                            title={event.eventLocation}
                         />
                         <CardTitle 
                             avatarSource={require('../images/User.png')}
