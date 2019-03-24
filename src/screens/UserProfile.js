@@ -3,6 +3,7 @@ import firebase from '@firebase/app';
 
 import { View, Text, StyleSheet } from 'react-native';
 import { Header, Image, Button, Input } from 'react-native-elements';
+import { Toast } from 'native-base';
 
 class UserProfile extends React.Component {
   state = {
@@ -31,6 +32,9 @@ class UserProfile extends React.Component {
     const userId = firebase.auth().currentUser.uid;
     this.database.ref('/users/' + userId).update({firstName: this.state.firstName,
                                                   lastName: this.state.lastName});
+    Toast.show({
+      text: 'Profile updated successfully'
+    });
   }
 
   render() {
@@ -38,20 +42,33 @@ class UserProfile extends React.Component {
       <View style={{backgroundColor: 'white', flex:1}}>
         <Header
           containerStyle={styles.header}
-          centerComponent={{ text: 'profile', style: { color: '#fff' } }}
+          centerComponent={{ text: 'Profile', style: { color: '#fff' } }}
         />
         <Image/>
-        <Text>First Name</Text>
+        <Text
+          style={{
+            marginLeft: 10,
+            marginTop: 10
+          }}
+        >First Name</Text>
         <Input 
           value={this.state.firstName}
           onChangeText={value => this.setState({firstName: value})}
         />
-        <Text>Last Name</Text>
+        <Text
+          style={{
+            marginLeft: 10,
+            marginTop: 10
+          }}
+        >Last Name</Text>
         <Input 
           value={this.state.lastName}
           onChangeText={value => this.setState({lastName: value})}
         />
         <Button
+          style={{
+            margin: 10
+          }}
           title="Save Changes"
           onPress={() => this.saveUserProfile()}
         />

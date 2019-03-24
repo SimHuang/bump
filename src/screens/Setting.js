@@ -79,10 +79,16 @@ class Setting extends React.Component {
             )
           }}
         </EventContext.Consumer>
-        <Button 
-          containerStyle={styles.logoutBtn}
-          title="Log Out"
-          onPress={() => this.logout()}/>
+        <View
+          style={{
+            flex: 1
+          }}
+        >
+          <Button 
+            containerStyle={styles.logoutBtn}
+            title="Log Out"
+            onPress={() => this.logout()}/>
+        </View>
       </View>
     )
   }
@@ -99,12 +105,10 @@ const styles = StyleSheet.create({
   },
 
   logoutBtn: {
-    position: 'absolute',
-    bottom: 0,
-    width: 350,
+    flex: 1,
+    justifyContent: 'flex-end',
     margin: 10,
     color: '#1e9e88',
-    backgroundColor: '#1e9e88'
   }
 });
 
