@@ -3,10 +3,11 @@ import { Alert, Dimensions, Platform, StyleSheet, Text, View, TouchableHighlight
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from '../../config';
-import { Card, Button, Header, Icon } from 'react-native-elements';
+import { Button, Header, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { NavigationEvents } from 'react-navigation';
 import { Spinner } from 'native-base';
+import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 
 import GlobalContext, { EventContext } from '../context/GlobalContext';
 
@@ -109,19 +110,53 @@ class EventFeed extends Component {
         const { events } = this.state;
         const eventIds = Object.keys(events);
         const eventDetails = Object.values(events);
+        const eventIcons =
+        {
+            sports: require("../images/Sports.png"),
+            party: require("../images/Party.png"),
+            food: require("../images/Food.png"),
+        }
+        var selectedIcon;
 
         return eventDetails.map((event, index) => {
+
+            switch (event.eventCategory)
+            {
+                case 'Sports': selectedIcon = eventIcons.sports; break;
+                case 'Party': selectedIcon = eventIcons.party; break;
+                case 'Food': selectedIcon = eventIcons.food; break;
+                default: selectedIcon = eventIcons.food; break;
+            }
+            
             return (
                 <TouchableHighlight
                     onPress={() => { this.goSeeEventDetail(eventIds[index], value) }}
                     underlayColor="white"
                 >
-                    <Card title={event.eventTitle} 
-                        key={eventIds[index]}>
-                        <View  >
-                            <Text>{event.eventCategory}</Text>
-                            <Text>{event.eventDescription}</Text>
-                        </View>
+                    <Card>
+                        <CardImage 
+                            source={selectedIcon}
+                            title={event.eventCategory}
+                        />
+                        <CardTitle 
+                            title={event.eventTitle}
+                            subtitle="Terence Lau"
+                        />
+                        <CardContent text= {event.eventDescription} />
+                        <CardAction 
+                            separator={true} 
+                            inColumn={false}>
+                            <CardButton
+                                onPress={() => {console.log("Commenting Event")}}
+                                title="Comment"
+                                color="orange"
+                            />
+                            <CardButton
+                                onPress={() => {console.log("Joining Event")}}
+                                title="Join"
+                                color="orange"
+                            />
+                        </CardAction>
                     </Card>
                 </TouchableHighlight>
             );
@@ -132,6 +167,13 @@ class EventFeed extends Component {
         const { events } = this.state;
         const eventIds = Object.keys(events);
         const eventDetails = Object.values(events);
+        const eventIcons =
+        {
+            sports: require("../images/Sports.png"),
+            party: require("../images/Party.png"),
+            food: require("../images/Food.png"),
+        }
+        var selectedIcon;
 
         let withCategory = eventDetails.filter((event) => {
             return event.eventCategory === this.state.filter;
@@ -144,17 +186,45 @@ class EventFeed extends Component {
         let filteredEvents = [...withCategory, ...withoutCategory];
 
         return filteredEvents.map((event, index) => {
+
+            switch (event.eventCategory)
+            {
+                case 'Sports': selectedIcon = eventIcons.sports; break;
+                case 'Party': selectedIcon = eventIcons.party; break;
+                case 'Food': selectedIcon = eventIcons.food; break;
+                default: selectedIcon = eventIcons.food; break;
+            }
+
             return (
+
                 <TouchableHighlight
                     onPress={() => { this.goSeeEventDetail(eventIds[index], value) }}
                     underlayColor="white"
                 >
-                    <Card title={event.eventTitle} 
-                        key={eventIds[index]}>
-                        <View  >
-                            <Text>{event.eventCategory}</Text>
-                            <Text>{event.eventDescription}</Text>
-                        </View>
+                    <Card>
+                        <CardImage 
+                            source={selectedIcon}
+                            title={event.eventCategory}
+                        />
+                        <CardTitle 
+                            title={event.eventTitle}
+                            subtitle="Terence Lau"
+                        />
+                        <CardContent text= {event.eventDescription} />
+                        <CardAction 
+                            separator={true} 
+                            inColumn={false}>
+                            <CardButton
+                                onPress={() => {console.log("Commenting Event")}}
+                                title="Comment"
+                                color="orange"
+                            />
+                            <CardButton
+                                onPress={() => {console.log("Joining Event")}}
+                                title="Join"
+                                color="orange"
+                            />
+                        </CardAction>
                     </Card>
                 </TouchableHighlight>
             );
@@ -185,19 +255,19 @@ class EventFeed extends Component {
         }
 
         return (
-            <View style={{backgroundColor: 'white', flex:1}}>
+            <View style={{backgroundColor: '#ECF2F6', flex:1}}>
                 <EventContext.Consumer>
                     {(value) => {
                         return (
                             <React.Fragment>
                                 <Header
-                                    centerComponent={{ text: 'Home', style: { color: '#000' } }}
+                                    centerComponent={{ text: 'Home', style: { color: '#fff' } }}
                                     rightComponent={<Icon name="plus" 
                                     type='font-awesome' 
                                     onPress={() => this.goToCreateEventScreen()}
-                                    color="#000"
+                                    color="#fff"
                                 />}
-                                containerStyle={{ backgroundColor: '#fff' }}
+                                containerStyle={{ backgroundColor: '#1e9e88' }}
                                 />
                                 <ScrollView
                                      onScroll={(eArg) => this.refreshEvents(eArg)}>

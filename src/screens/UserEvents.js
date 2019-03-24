@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Alert, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
+import {Platform, StyleSheet, Text, View, Alert, TouchableHighlight } from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from '@firebase/app';
 import '@firebase/auth';

@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
-import {Alert, Platform, StyleSheet, Text, View} from 'react-native';
+import {Alert, Platform, StyleSheet, Text, View,TextInput, Image, TouchableOpacity} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from '@firebase/app';
 import '@firebase/auth';
 import { firebaseConfig } from '../../config';
-
 import { Input, Button } from 'react-native-elements';
-
 
 class Login extends Component {
     constructor(props) {
@@ -59,24 +57,38 @@ class Login extends Component {
         console.log('opening loging screen');
         return (
             <View style={styles.container}>
-                <Text>Login page</Text>
-                <Input
-                    placeholder="Username"
-                    value={this.state.email}
-                    onChangeText={(email) => this.setState({email})}
-                />
-                <Input
-                    placeholder="Password"
-                    value={this.state.password}
-                    onChangeText={(password) => this.setState({password})}
-                />
-                <Button 
-                    onPress={()=> this.authenticate(this.state.email, this.state.password)}
-                    style={styles.button}
-                    title="Login"/>
-                <Button
+                <View style={{alignItems: 'center'}}>
+                    <Image source={require('../../images/logo.png')} style={styles.logo} />
+                </View>
+                <View alignItems={'center'}>
+                    <TextInput style={styles.input}
+                        autoCapitalize='none'
+                        placeholder="Username"
+                        placeholderTextColor="white"
+                        value={this.state.email}
+                        onChangeText={(email) => this.setState({email})}
+                    />
+                    <TextInput style={styles.input}
+                        secureTextEntry
+                        placeholder="Password"
+                        placeholderTextColor="white"
+                        value={this.state.password}
+                        onChangeText={(password) => this.setState({password})}
+                    />
+
+                <TouchableOpacity style={styles.button}
+                    onPress={()=> {
+                        this.authenticate(this.state.email, this.state.password)}
+                    }>
+                    <Text style={styles.buttonText}>Login</Text>
+                </TouchableOpacity>
+
+                </View>
+
+                <Button color={'#c0c1b6'}
                     type="clear"
                     title="Create New Account"
+                    titleStyle={{ color: 'white'}}
                     onPress={()=> this.signupOnPressHandler()}/>
             </View>
         )
@@ -85,11 +97,34 @@ class Login extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center'
+        justifyContent: 'center',
+        backgroundColor: '#246d60',
+        flexGrow: 1,
     },
     button: {
-        marginTop: 20,
-        width: 250
+        height: 40,
+        backgroundColor: '#979499',
+        width: '60%'
+    },
+    input: {
+        color: 'white',
+        height: 40,
+        borderColor: 'white',
+        borderWidth: 1,
+        marginBottom: 10,
+        padding: 10,
+        width: '80%',
+    },
+    logo: {
+        resizeMode: 'contain',
+        width: 300,
+        height: 100,
+    },
+    buttonText: {
+        color: '#fff',
+        textAlign: 'center',
+        fontSize: 20,
+        paddingTop: 5
     }
 })
 

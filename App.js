@@ -33,6 +33,7 @@ import Setting from './src/screens/Setting';
 import CreateEvent from './src/screens/CreateEvent';
 import EditEvent from './src/screens/EditEvent';
 import GlobalContext from './src/context/GlobalContext';
+import Splash from './src/screens/Splash';
 
 // const store = createStore(reducers); 
 
@@ -111,9 +112,13 @@ const LoginNavigator = createStackNavigator({
   Login: Login
 });
 
+const SplashNavigator = createStackNavigator({
+    Splash : Splash
+});
+
 const Main = createAppContainer(createSwitchNavigator(
-  {AppNavigator, SignupNavigator, LoginNavigator, CreateEvent, EditEvent, EventDetail}, 
-  {initialRouteName: 'LoginNavigator'})
+  {SplashNavigator, AppNavigator, SignupNavigator, LoginNavigator, CreateEvent, EditEvent, EventDetail}, 
+  {initialRouteName: 'SplashNavigator'})
 );
 
 type Props = {};
