@@ -140,8 +140,9 @@ class EventFeed extends Component {
                             title={event.eventCategory}
                         />
                         <CardTitle 
+                            avatarSource={require('../images/User.png')}
                             title={event.eventTitle}
-                            subtitle="Terence Lau"
+                            subtitle={event.eventDate}
                         />
                         <CardContent text= {event.eventDescription} />
                         <CardAction 
@@ -208,8 +209,9 @@ class EventFeed extends Component {
                             title={event.eventCategory}
                         />
                         <CardTitle 
+                            avatarSource={require('../images/User.png')}
                             title={event.eventTitle}
-                            subtitle="Terence Lau"
+                            subtitle={event.eventDate}
                         />
                         <CardContent text= {event.eventDescription} />
                         <CardAction 

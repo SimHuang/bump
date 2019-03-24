@@ -65,13 +65,17 @@ class UserProfile extends React.Component {
           value={this.state.lastName}
           onChangeText={value => this.setState({lastName: value})}
         />
-        <Button
-          style={{
-            margin: 10
-          }}
-          title="Save Changes"
-          onPress={() => this.saveUserProfile()}
-        />
+
+        <View style={{flex:1, justifyContent: 'flex-end', marginBottom:36}}>
+          <Button
+            color={'#ffffff'}
+            title="Save Changes"
+            titleStyle={{color:'orange'}}
+            type = "outline"
+            color="orange"
+            onPress={() => this.saveUserProfile()} />
+        </View>
+
         <Text>{this.state.message}</Text>
       </View>
     )

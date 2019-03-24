@@ -8,6 +8,7 @@ import { Button, Header, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 import GlobalContext, { EventContext } from '../context/GlobalContext';
+import { Spinner } from 'native-base';
 
 class Hosted extends Component {
     constructor(props) {
@@ -171,8 +172,14 @@ class Hosted extends Component {
 
     renderLoading() {
         return (
-            <View>
-                <Text>Loading...</Text>
+            <View style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundColor: '#fff'
+              }}>
+                {/* <Text>Loading...</Text> */}
+                <Spinner color="#1e9e88"/>
             </View>
         );
     }

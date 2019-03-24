@@ -8,6 +8,7 @@ import { Button, Header, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
 import GlobalContext, { EventContext } from '../context/GlobalContext';
+import { Spinner } from 'native-base';
 
 class UserEvents extends Component {
     constructor(props) {
@@ -121,8 +122,9 @@ class UserEvents extends Component {
                                 title={event.eventCategory}
                             />
                             <CardTitle 
+                                avatarSource={require('../images/User.png')}
                                 title={event.eventTitle}
-                                subtitle="Terence Lau"
+                                subtitle={event.eventDate}
                             />
                             <CardContent text= {event.eventDescription} />
                             <CardAction 
@@ -150,8 +152,14 @@ class UserEvents extends Component {
 
     renderLoading() {
         return (
-            <View>
-                <Text>Loading...</Text>
+            <View style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundColor: '#fff'
+              }}>
+                {/* <Text>Loading...</Text> */}
+                <Spinner color="#1e9e88"/>
             </View>
         );
     }
