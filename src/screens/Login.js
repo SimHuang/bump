@@ -57,7 +57,9 @@ class Login extends Component {
         console.log('opening loging screen');
         return (
             <View style={styles.container}>
-                <Image source={require('../../images/logo.png')} style={styles.logo} />
+                <View style={{alignItems: 'center'}}>
+                    <Image source={require('../../images/logo.png')} style={styles.logo} />
+                </View>
                 <View alignItems={'center'}>
                     <TextInput style={styles.input}
                         autoCapitalize='none'
@@ -83,9 +85,10 @@ class Login extends Component {
 
                 </View>
 
-                <Button color={'#2980b6'}
+                <Button color={'#c0c1b6'}
                     type="clear"
                     title="Create New Account"
+                    titleStyle={{ color: 'white'}}
                     onPress={()=> this.signupOnPressHandler()}/>
             </View>
         )
@@ -95,12 +98,12 @@ class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'center',
-        backgroundColor: '#2c3e50',
+        backgroundColor: '#246d60',
         flexGrow: 1,
     },
     button: {
         height: 40,
-        backgroundColor: '#2980b6',
+        backgroundColor: '#979499',
         width: '60%'
     },
     input: {
@@ -114,9 +117,8 @@ const styles = StyleSheet.create({
     },
     logo: {
         resizeMode: 'contain',
-        width: 400,
+        width: 300,
         height: 100,
-        marginBottom: 20
     },
     buttonText: {
         color: '#fff',
