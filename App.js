@@ -115,7 +115,12 @@ const LoginNavigator = createStackNavigator({
 });
 
 const SplashNavigator = createStackNavigator({
-    Splash : Splash
+    Splash : {
+      screen: Splash,
+      navigationOptions: {
+        header: null
+      }
+    }
 });
 
 const Main = createAppContainer(createSwitchNavigator(
