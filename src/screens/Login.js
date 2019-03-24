@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import {Alert, Platform, StyleSheet, Text, View} from 'react-native';
-import {Platform, StyleSheet, Text, View, ImageBackground, TextInput, Image, TouchableOpacity} from 'react-native';
+import {Alert, Platform, StyleSheet, Text, View,TextInput, Image, TouchableOpacity} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from '@firebase/app';
 import '@firebase/auth';
 import { firebaseConfig } from '../../config';
-
 import { Input, Button } from 'react-native-elements';
-
 
 class Login extends Component {
     constructor(props) {
