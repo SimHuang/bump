@@ -8,6 +8,7 @@ import { Alert, TouchableOpacity, View, Text } from 'react-native';
 import { Header, Icon, Input, Divider, Button } from 'react-native-elements';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Container, Content, Picker, Form, Item, List, ListItem } from "native-base";
+import moment from "moment";
 
 class CreateEvent extends React.Component {
   constructor(props) {
@@ -49,7 +50,7 @@ class CreateEvent extends React.Component {
   showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
   hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
   handleDatePicked = (date) => {
-    this.setState({eventDate: date.toString()});
+    this.setState({eventDate: moment(date).format('MMMM Do YYYY, h:mm a')});
     this.hideDateTimePicker();
   };
 
