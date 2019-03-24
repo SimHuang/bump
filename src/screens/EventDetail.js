@@ -9,16 +9,6 @@ import firebase from '@firebase/app';
 
 class EventDetail extends Component {
 
-    joinEvent(eventId) {
-        const myUserId = firebase.auth().currentUser.uid;
-
-        firebase.database().ref('/users/' + myUserId + '/currentEvents').push().set(eventId, error => {
-            setTimeout(() => {
-              this.props.navigation.navigate('EventFeed');
-            }, 1000);
-          });
-    }
-
     renderEventDetails(eventDetail) {
         return (
             <React.Fragment>
@@ -37,7 +27,11 @@ class EventDetail extends Component {
                             <Input disabled placeholder={"Available Spots: " + eventDetail.eventAvailableSpots}/>
                         </Item>
                         <Item disabled>
-                            <Text>{eventDetail.eventDescription}</Text>
+                            <Input
+                                multiline = {true}
+                                disabled placeholder={"Description: " + eventDetail.eventDescription}/>
+                        </Item>
+                        <Item disabled>
                         </Item>
                     </Content>
                 </Container>
@@ -54,14 +48,13 @@ class EventDetail extends Component {
                         return (
                             <React.Fragment>
                             <Header
+                                containerStyle={{backgroundColor: '#1e9e88'}}
                                 centerComponent={{ text: 'Detail', style: { color: '#fff' } }}
                                 rightComponent={<Icon name="times"
                                 type="font-awesome"
                                 onPress={() => this.props.navigation.navigate('AppNavigator')}/>}
                                 />
                             {this.renderEventDetails(currentEvent)}
-                            <Button title="Join Event"
-                                    onPress={() => this.joinEvent(value.selectedEvent)}/>
                         </React.Fragment>
                         );
                     }}
