@@ -14,6 +14,7 @@ class CreateEvent extends React.Component {
     super(props);
     this.state = {
       eventTitle: '',
+      eventLocation: '',
       eventDescription: '',
       eventCategory: '',
       eventDate: '',
@@ -55,10 +56,12 @@ class CreateEvent extends React.Component {
   createEvent() {
 
     if(!this.state.eventTitle || 
+       !this.state.eventLocation ||
        !this.state.eventDescription || 
        !this.state.eventCategory || 
        !this.state.eventDate || 
        !this.state.eventAvailableSpots)
+
     {
       Alert.alert("Please fill in all fields");
       return;
@@ -69,6 +72,7 @@ class CreateEvent extends React.Component {
     firebase.database().ref('/events/' + newPostKey).set({
       user: userId,
       eventTitle: this.state.eventTitle,
+      eventLocation: this.state.eventLocation,
       eventDescription: this.state.eventDescription,
       eventCategory: this.state.eventCategory,
       eventDate: this.state.eventDate,
@@ -109,7 +113,13 @@ class CreateEvent extends React.Component {
           value={this.state.eventTitle}
           onChangeText={(eventTitle) => this.setState({eventTitle})}/>
 
+       <Input
+          placeholder="Event Location" 
+          value={this.state.eventLocation}
+          onChangeText={(eventLocation) => this.setState({eventLocation})}/> 
+
         <Input
+          multiline = {true}
           placeholder="Event Description"
           value={this.state.eventDescription}
           onChangeText={eventDescription => this.setState({eventDescription})} />
