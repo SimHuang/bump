@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput } from 'react-native';
 import { Header, Icon, Button } from 'react-native-elements';
+import { Container, Content, Item, Input } from 'native-base';
 
 import GlobalContext, { EventContext } from '../context/GlobalContext';
 
@@ -21,12 +22,25 @@ class EventDetail extends Component {
     renderEventDetails(eventDetail) {
         return (
             <React.Fragment>
-                <Text>Title</Text>
-                <Text>{eventDetail.eventTitle}</Text>
-                <Text>Category</Text>
-                <Text>{eventDetail.eventCategory}</Text>
-                <Text>Description</Text>
-                <Text>{eventDetail.eventDescription}</Text>
+                <Container>
+                    <Content>
+                        <Item disabled>
+                            <Input disabled placeholder={"Title: " + eventDetail.eventTitle}/>
+                        </Item>
+                        <Item disabled>
+                            <Input disabled placeholder={"Category: " + eventDetail.eventCategory}/>
+                        </Item>
+                        <Item disabled>
+                            <Input disabled placeholder={"Date: " + eventDetail.eventDate}/>
+                        </Item>
+                        <Item disabled>
+                            <Input disabled placeholder={"Available Spots: " + eventDetail.eventAvailableSpots}/>
+                        </Item>
+                        <Item disabled>
+                            <Text>{eventDetail.eventDescription}</Text>
+                        </Item>
+                    </Content>
+                </Container>
             </React.Fragment>
         )
     }
@@ -45,7 +59,6 @@ class EventDetail extends Component {
                                 type="font-awesome"
                                 onPress={() => this.props.navigation.navigate('AppNavigator')}/>}
                                 />
-                            <Text>Event detail view</Text>
                             {this.renderEventDetails(currentEvent)}
                             <Button title="Join Event"
                                     onPress={() => this.joinEvent(value.selectedEvent)}/>

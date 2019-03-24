@@ -5,20 +5,28 @@ export const EventContext = React.createContext({});
 class GlobalContext extends React.Component {
   state = {
     currentEvents: {},
-    selectedEvent: null
+    selectedEvent: null,
+    user: null,
+    shouldUpdateSetting: false,
+    filter: null
   }
 
   setCurrentEvents(currentEvents) {
-    console.log('events stored');
     this.setState({currentEvents});
-    console.log(this.state.currentEvents);
   }
 
   setSelectedEvent(selectedEvent, callback) {
-    console.log('selected events from global context ' + selectedEvent);
     this.setState({selectedEvent}, () => {
       callback();
     });
+  }
+
+  setUser(user) {
+    this.setState({user});
+  }
+
+  setFilter(value) {
+    this.setState({value});
   }
 
   render() {
@@ -27,7 +35,9 @@ class GlobalContext extends React.Component {
         {
           ...this.state,
           setCurrentEvents: (events) => this.setCurrentEvents(events),
-          setSelectedEvent: (event, callback) => this.setSelectedEvent(event, callback)
+          setSelectedEvent: (event, callback) => this.setSelectedEvent(event, callback),
+          setUser: (user) => this.setUser(user),
+          setFilter: (filter) => this.setFilter(filter)
         }
       }>
         {this.props.children}

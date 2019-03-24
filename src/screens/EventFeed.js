@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
+import { Alert, Dimensions, Platform, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from '../../config';
 import { Card, Button, Header, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
+import { NavigationEvents } from 'react-navigation';
+import { Spinner } from 'native-base';
 
 import GlobalContext, { EventContext } from '../context/GlobalContext';
 
@@ -13,7 +15,10 @@ class EventFeed extends Component {
         super(props);
         this.state = {
             isLoading: true,
-            events: null
+            user: null,
+            events: null,
+            filter: null,
+            eventRemoved: null
         }
         this.database = firebase.database();
         // this.myContext = null;
@@ -22,16 +27,38 @@ class EventFeed extends Component {
     componentDidMount() {
         let value = this.context;
         // firebase.initializeApp(firebaseConfig);
+        const userID = firebase.auth().currentUser.uid;
+        //get event info
         this.database.ref('/events').once('value')
             .then(snapshot => {
-                this.setState({isLoading: false, events:snapshot.val()});
+                this.setState({events:snapshot.val()});
                 value.setCurrentEvents(snapshot.val());
+
+                //get user info
+                this.database.ref('/users/' + userID).once('value')
+                .then(snapshot => {
+                    value.setFilter(snapshot.val().filter);
+                    this.setState({isLoading: false, user:snapshot.val(), filter: snapshot.val().filter});
+                    // value.setCurrentEvents(snapshot.val());
+                });
+
             });
+
+        //add listener for category change
+        this.database.ref('/users/' + userID).on('child_changed', (data) => {
+            this.setState({filter: data.val()});
+            value.setFilter(data.val());
+        });
     }
 
-    componentWillUnmount() {
-        // when the user leave this page, let's determine if any events should be added to history
-        
+    /**
+     * This gets called when we update the user list
+     */
+    componentDidUpdate() {
+        let value = this.context;
+        if (value.shouldUpdateSetting) {
+            return true;
+        }
     }
 
     logout() {
@@ -41,13 +68,38 @@ class EventFeed extends Component {
         });
     }
 
+    refreshEvents(eArg) {
+        var windowHeight = Dimensions.get('window').height,
+          height = eArg.nativeEvent.contentSize.height,
+          offset = eArg.nativeEvent.contentOffset.y;
+
+        if( windowHeight + offset >= height ){
+            //Alert.alert("Bottom reached");
+            this.database.ref('/events').once('value')
+            .then(snapshot => {
+                this.setState({events:snapshot.val()});
+                value.setCurrentEvents(snapshot.val());
+
+                //get user info
+                this.database.ref('/users/' + userID).once('value')
+                .then(snapshot => {
+                    value.setFilter(snapshot.val().filter);
+                    this.setState({isLoading: false, user:snapshot.val(), filter: snapshot.val().filter});
+                    // value.setCurrentEvents(snapshot.val());
+                });
+
+            });
+        }
+
+    }
+
     goToCreateEventScreen() {
         this.props.navigation.navigate('CreateEvent');
     }
 
     goSeeEventDetail(event, value) {
+        // let value = this.context;
         // Go to event detail page
-        console.log('The event you selected  ' + event);
         value.setSelectedEvent(event, () => {
             this.props.navigation.navigate('EventDetail');
         });
@@ -67,6 +119,40 @@ class EventFeed extends Component {
                     <Card title={event.eventTitle} 
                         key={eventIds[index]}>
                         <View  >
+                            <Text>{event.eventCategory}</Text>
+                            <Text>{event.eventDescription}</Text>
+                        </View>
+                    </Card>
+                </TouchableHighlight>
+            );
+        });
+    }
+
+    renderFilteredEvents(value) {
+        const { events } = this.state;
+        const eventIds = Object.keys(events);
+        const eventDetails = Object.values(events);
+
+        let withCategory = eventDetails.filter((event) => {
+            return event.eventCategory === this.state.filter;
+        });
+
+        let withoutCategory  = eventDetails.filter((event) => {
+            return event.eventCategory !== this.state.filter;
+        });
+
+        let filteredEvents = [...withCategory, ...withoutCategory];
+
+        return filteredEvents.map((event, index) => {
+            return (
+                <TouchableHighlight
+                    onPress={() => { this.goSeeEventDetail(eventIds[index], value) }}
+                    underlayColor="white"
+                >
+                    <Card title={event.eventTitle} 
+                        key={eventIds[index]}>
+                        <View  >
+                            <Text>{event.eventCategory}</Text>
                             <Text>{event.eventDescription}</Text>
                         </View>
                     </Card>
@@ -77,8 +163,14 @@ class EventFeed extends Component {
 
     renderLoading() {
         return (
-            <View>
-                <Text>Loading...</Text>
+            <View style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundColor: '#fff'
+              }}>
+                {/* <Text>Loading...</Text> */}
+                <Spinner color="#1e9e88"/>
             </View>
         );
     }
@@ -96,7 +188,6 @@ class EventFeed extends Component {
             <View style={{backgroundColor: 'white', flex:1}}>
                 <EventContext.Consumer>
                     {(value) => {
-                        console.log(value);
                         return (
                             <React.Fragment>
                                 <Header
@@ -108,8 +199,9 @@ class EventFeed extends Component {
                                 />}
                                 containerStyle={{ backgroundColor: '#fff' }}
                                 />
-                                <ScrollView>
-                                    {this.renderEventCards(value)}
+                                <ScrollView
+                                     onScroll={(eArg) => this.refreshEvents(eArg)}>
+                                    {this.state.filter && this.state.filter !== 'None' ? this.renderFilteredEvents(value) : this.renderEventCards(value)}
                                 </ScrollView>
                             </React.Fragment>
                         )}

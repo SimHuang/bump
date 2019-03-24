@@ -40,7 +40,6 @@ class Hosted extends Component {
 
     goSeeEventDetail() {
         // Go to event detail page
-        console.log('go to event detail page')
         this.props.navigation.navigate('EventDetail');
     }
 
@@ -54,8 +53,24 @@ class Hosted extends Component {
         this.props.navigation.navigate('EditEvent', {eventID: key});
     }
 
-    removeUserEvent(key) {
+    removeUserEvent(key, value) {
+
         const userID = firebase.auth().currentUser.uid;
+
+        //Remove event from list of user posted events
+        firebase.database().ref('/users/' + userID + '/postedEvents').child(key).remove();
+        delete this.state.userPostedEvents[key];
+        this.setState({ userPostedEvents: this.state.userPostedEvents});
+
+        //Remove event from master list of events
+        firebase.database().ref('/events').child(value).remove();
+        this.setState({ events: this.state.events});
+    }
+
+    removeDeadEvent(key, value) {
+        const userID = firebase.auth().currentUser.uid;
+
+        //Remove event from list of user posted events
         firebase.database().ref('/users/' + userID + '/postedEvents').child(key).remove();
         delete this.state.userPostedEvents[key];
         this.setState({ userPostedEvents: this.state.userPostedEvents});
@@ -87,46 +102,63 @@ class Hosted extends Component {
 
         return uEventIds.map((uEventId, index) => {
 
-            event = events[uEventId];
-            switch (event.eventCategory)
+            if (!events[uEventId])
             {
-                case 'Sports': selectedIcon = eventIcons.sports; break;
-                case 'Party': selectedIcon = eventIcons.party; break;
-                case 'Food': selectedIcon = eventIcons.food; break;
-                default: selectedIcon = eventIcons.food; break;
+                //Remove the entry and move on
+                this.removeDeadEvent(uEventKeys[index]);
+                return;
             }
+            else
+            {
+                //Valid entry, proceed to display
+                event = events[uEventId];
+                switch (event.eventCategory)
+                {
+                    case 'Sports': selectedIcon = eventIcons.sports; break;
+                    case 'Party': selectedIcon = eventIcons.party; break;
+                    case 'Food': selectedIcon = eventIcons.food; break;
+                    default: selectedIcon = eventIcons.food; break;
+                }
 
-            return (
-                <TouchableWithoutFeedback
-                    onPress={() => { this.goSeeEventDetail() }}
-                >
-                    <Card>
-                        <CardImage 
-                            source={selectedIcon}
-                            title={event.eventCategory}
-                        />
-                        <CardTitle 
-                            title={event.eventTitle}
-                            subtitle="Terence Lau"
-                        />
-                        <CardContent text= {event.eventDescription} />
-                        <CardAction 
-                            separator={true} 
-                            inColumn={false}>
-                            <CardButton
-                            onPress={() => {this.goEditEvent(uEventIds[index])}}
-                            title="Edit"
-                            color="orange"
+                return (
+                    <TouchableWithoutFeedback
+                        onPress={() => { this.goSeeEventDetail() }}
+                    >
+                        <Card>
+                            <CardImage 
+                                source={selectedIcon}
+                                title={event.eventCategory}
                             />
-                            <CardButton
-                            onPress={() => {this.removeUserEvent(uEventKeys[index])}}
-                            title="Cancel"
-                            color="orange"
+                            <CardTitle 
+                                title={event.eventTitle}
+                                subtitle="Terence Lau"
                             />
-                        </CardAction>
-                    </Card>
-                </TouchableWithoutFeedback>
-            );
+                            <CardContent text= {event.eventDescription} />
+                            <CardAction 
+                                separator={true} 
+                                inColumn={false}>
+                                <CardButton
+                                    onPress={() => {this.goEditEvent(uEventIds[index])}}
+                                    title="Edit"
+                                    color="orange"
+                                />
+                                <CardButton
+                                    onPress={() => {Alert.alert(
+                                                        'Canceling Event',
+                                                        'Are you sure?',
+                                                        [
+                                                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+                                                        {text: 'OK', onPress: () => {this.removeUserEvent(uEventKeys[index],
+                                                                                                          uEventIds[index])}}
+                                                        ]);}}
+                                    title="Cancel"
+                                    color="orange"
+                                />
+                            </CardAction>
+                        </Card>
+                    </TouchableWithoutFeedback>
+                );
+            }
         });
     }
 
@@ -174,48 +206,9 @@ const styles = StyleSheet.create({
         flex: 1
     },
 
-    button: {
-        borderRadius: 0,
-        marginLeft: 0,
-        marginRight: 0,
-        marginBottom: 0,
-        backgroundColor: '#1addad'
-    },
-
-    container: {
-        flex: 1,
-        flexDirection: 'row',
-        alignItems: 'stretch',
-        justifyContent: 'space-between',
-
-    },
-
-    zeroMarginHor: {
-        marginLeft: 0,
-        marginRight: 0,
-    },
-
     zeroMarginVert: {
         marginTop: 0,
         marginBottom: 0
-    },
-
-    zeroMargin: {
-        marginTop: 0,
-        marginBottom: 0,
-        marginLeft: 0,
-        marginRight: 0
-    },
-
-    border: {
-        borderRadius: 2,
-        borderWidth: 2,
-        borderColor: '#036482'
-    },
-
-    buttonContainer: {
-        flex: 1,
-        alignItems: 'flex-end',
     },
 });
 

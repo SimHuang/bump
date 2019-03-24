@@ -60,34 +60,42 @@ const AppNavigator = createBottomTabNavigator({
       showLabel: false
     },
     navigationOptions: {
-      title: 'Home'
+      title: 'Home',
+      tabBarIcon: <Icon type="ion-icon" color="#1e9e88" name="home"/>
     }
   },
   UserEvents: {
     screen: UserEvents,
     navigationOptions: {
-      title: 'Joined'
+      title: 'Joined',
+      tabBarIcon: <Icon name="users" color="#1e9e88" type="font-awesome" size={20}/>
     }
   },
-  Hosted,
+  Hosted : {
+    screen: Hosted,
+    navigationOptions: {
+      title: 'Hosted',
+      tabBarIcon: <Icon type="ion-icon" color="#1e9e88" name="create"/>
+    }
+  },
   UserProfile: {
     screen: UserProfile,
     navigationOptions: {
-      title: 'Profile'
+      title: 'Profile',
+      tabBarIcon: <Icon type="ion-icon" color="#1e9e88" name="person"/>
     }
   },
   Setting: {
     screen: Setting,
     navigationOptions: {
-      tarBarIcon: () => {
-        <Icon name="cog" type="font-awesome" size={20}/>
-      }
+      tabBarIcon: <Icon name="cog" color="#1e9e88" type="font-awesome" size={20}/>
     }
   }
 },
 {
   tabBarOptions: {
-    showIcon: true
+    showIcon: true,
+    activeTintColor: "#1e9e88"
   }
 });
 

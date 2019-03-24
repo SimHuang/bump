@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Alert, Platform, StyleSheet, Text, View} from 'react-native';
 import {Platform, StyleSheet, Text, View, ImageBackground, TextInput, Image, TouchableOpacity} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from '@firebase/app';
@@ -38,6 +39,7 @@ class Login extends Component {
     authenticate(email, password) {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .catch((error) => {
+           Alert.alert("Invalid Username/Password");
            console.log(error);
         });
     }
@@ -83,7 +85,7 @@ class Login extends Component {
                 </TouchableOpacity>
 
                 </View>
-                
+
                 <Button color={'#2980b6'}
                     type="clear"
                     title="Create New Account"

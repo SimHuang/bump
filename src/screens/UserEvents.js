@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Alert, TouchableWithoutFeedback } from 'react-native';
+import {Platform, StyleSheet, Text, View, Alert, TouchableHighlight, TouchableWithoutFeedback } from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from '@firebase/app';
 import '@firebase/auth';
@@ -7,6 +7,7 @@ import { firebaseConfig } from '../../config';
 import { Button, Header, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-material-cards'
+import GlobalContext, { EventContext } from '../context/GlobalContext';
 
 class UserEvents extends Component {
     constructor(props) {
@@ -20,10 +21,12 @@ class UserEvents extends Component {
     }
 
     componentDidMount() {
+        let value = this.context;
         this.database.ref('/events').once('value')
             .then(snapshot => {
                 console.log(snapshot.val());
                 this.setState({isLoading: false, events:snapshot.val()});
+                value.setCurrentEvents(snapshot.val());
             });
 
         const userID = firebase.auth().currentUser.uid;
@@ -38,10 +41,12 @@ class UserEvents extends Component {
             }).catch((error) => {});
     }
 
-    goSeeEventDetail() {
+    goSeeEventDetail(event, value) {
         // Go to event detail page
-        console.log('go to event detail page')
-        this.props.navigation.navigate('EventDetail');
+        console.log('The event you selected  ' + event);
+        value.setSelectedEvent(event, () => {
+            this.props.navigation.navigate('EventDetail');
+        });
     }
 
     goToHomeScreen() {
@@ -56,7 +61,7 @@ class UserEvents extends Component {
         this.setState({ userJoinedEvents: this.state.userJoinedEvents});
     }
 
-    renderEventCards() {
+    renderEventCards(value) {
 
         if(!this.state.userJoinedEvents)
         {
@@ -82,41 +87,59 @@ class UserEvents extends Component {
 
         return uEventIds.map((uEventId, index) => {
 
-            event = events[uEventId];
-            switch (event.eventCategory)
+            if (!events[uEventId])
             {
-                case 'Sports': selectedIcon = eventIcons.sports; break;
-                case 'Party': selectedIcon = eventIcons.party; break;
-                case 'Food': selectedIcon = eventIcons.food; break;
-                default: selectedIcon = eventIcons.food; break;
+                //Remove the entry and move on
+                this.removeUserEvent(uEventKeys[index]);
+                return;
             }
+            else
+            {
+                //Valid entry, proceed to display
+                event = events[uEventId];
+                switch (event.eventCategory)
+                {
+                    case 'Sports': selectedIcon = eventIcons.sports; break;
+                    case 'Party': selectedIcon = eventIcons.party; break;
+                    case 'Food': selectedIcon = eventIcons.food; break;
+                    default: selectedIcon = eventIcons.food; break;
+                }
 
-            return (
-                <TouchableWithoutFeedback
-                    onPress={() => { this.goSeeEventDetail() }}
-                >
-                    <Card>
-                        <CardImage 
-                            source={selectedIcon}
-                            title={event.eventCategory}
-                        />
-                        <CardTitle 
-                            title={event.eventTitle}
-                            subtitle="Terence Lau"
-                        />
-                        <CardContent text= {event.eventDescription} />
-                        <CardAction 
-                            separator={true} 
-                            inColumn={false}>
-                            <CardButton
-                            onPress={() => {this.removeUserEvent(uEventKeys[index])}}
-                            title="Leave"
-                            color="orange"
+                return (
+                    <TouchableHighlight
+                        onPress={() => { this.goSeeEventDetail(uEventIds[index], value) }}
+                        underlayColor="white"
+                    >
+                        <Card>
+                            <CardImage 
+                                source={selectedIcon}
+                                title={event.eventCategory}
                             />
-                        </CardAction>
-                    </Card>
-                </TouchableWithoutFeedback>
-            );
+                            <CardTitle 
+                                title={event.eventTitle}
+                                subtitle="Terence Lau"
+                            />
+                            <CardContent text= {event.eventDescription} />
+                            <CardAction 
+                                separator={true} 
+                                inColumn={false}>
+                                <CardButton
+                                    onPress={() => {this.removeUserEvent(uEventKeys[index])}}
+                                    onPress={() => {Alert.alert(
+                                                        'Leaving Event',
+                                                        'Are you sure?',
+                                                        [
+                                                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+                                                        {text: 'OK', onPress: () => {this.removeUserEvent(uEventKeys[index])}}
+                                                        ]);}}
+                                    title="Leave"
+                                    color="orange"
+                                />
+                            </CardAction>
+                        </Card>
+                    </TouchableHighlight>
+                );
+            }
         });
     }
 
@@ -129,26 +152,37 @@ class UserEvents extends Component {
     }
 
     render() {
+
         if(this.state.isLoading) {
             return this.renderLoading();
         }
 
         return (
             <View style={styles.background}>
-                <Header
-                    containerStyle={styles.header}
-                    centerComponent={{ text: '' }}
-                    leftComponent={<Icon name="settings" color = "#ffffff"/>}
-                    rightComponent={<Icon name="home" 
-                        type='font-awesome' 
-                        onPress={() => this.goToHomeScreen()}
-                        color="#ffffff"
-                    />}
-                />
-                <ScrollView contentContainerStyle = {styles.zeroMarginVert}>
-                    {this.renderEventCards()}
-                </ScrollView>
+                <EventContext.Consumer>
+                    {(value) => {
+                        console.log(value);
+                        return (
+                            <React.Fragment>
+                                <Header
+                                    containerStyle={styles.header}
+                                    centerComponent={{ text: ''}}
+                                    leftComponent={<Icon name="settings" color = "#ffffff"/>}
+                                    rightComponent={<Icon name="home"
+                                        type='font-awesome'
+                                        onPress={() => this.goToHomeScreen()}
+                                        color="#ffffff"
+                                    />}
+                                />
+                                <ScrollView contentContainerStyle = {styles.zeroMarginVert}>
+                                    {this.renderEventCards(value)}
+                                </ScrollView>
+                            </React.Fragment>
+                        )}
+                    }
+                </EventContext.Consumer>
             </View>
+
         )
     }
 }
