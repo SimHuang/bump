@@ -54,6 +54,16 @@ class EventFeed extends Component {
             this.setState({filter: data.val()});
             value.setFilter(data.val());
         });
+
+        // //add listener for event comments change
+        this.database.ref('/events').on('child_changed', (data) => {
+            console.log('detected eventcage');
+            this.database.ref('/events').once('value')
+            .then(snapshot => {
+                this.setState({events:snapshot.val()});
+                value.setCurrentEvents(snapshot.val());
+            });
+        });        
     }
 
     /**
@@ -101,10 +111,6 @@ class EventFeed extends Component {
         value.setSelectedEvent(event, () => {
             this.props.navigation.navigate('EventDetail');
         });
-    }
-
-    commentOnEvent() {
-
     }
 
     joinEvent(eventId) {
