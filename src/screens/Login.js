@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Alert, Platform, StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from '@firebase/app';
 import '@firebase/auth';
@@ -38,6 +38,7 @@ class Login extends Component {
     authenticate(email, password) {
         firebase.auth().signInWithEmailAndPassword(email, password)
         .catch((error) => {
+           Alert.alert("Invalid Username/Password");
            console.log(error);
         });
     }
