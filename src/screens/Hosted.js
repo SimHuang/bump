@@ -54,6 +54,7 @@ class Hosted extends Component {
     }
 
     removeUserEvent(key, value) {
+
         const userID = firebase.auth().currentUser.uid;
 
         //Remove event from list of user posted events
@@ -118,7 +119,7 @@ class Hosted extends Component {
                     case 'Food': selectedIcon = eventIcons.food; break;
                     default: selectedIcon = eventIcons.food; break;
                 }
-    
+
                 return (
                     <TouchableWithoutFeedback
                         onPress={() => { this.goSeeEventDetail() }}
@@ -137,14 +138,21 @@ class Hosted extends Component {
                                 separator={true} 
                                 inColumn={false}>
                                 <CardButton
-                                onPress={() => {this.goEditEvent(uEventIds[index])}}
-                                title="Edit"
-                                color="orange"
+                                    onPress={() => {this.goEditEvent(uEventIds[index])}}
+                                    title="Edit"
+                                    color="orange"
                                 />
                                 <CardButton
-                                onPress={() => {this.removeUserEvent(uEventKeys[index], uEventIds[index])}}
-                                title="Cancel"
-                                color="orange"
+                                    onPress={() => {Alert.alert(
+                                                        'Canceling Event',
+                                                        'Are you sure?',
+                                                        [
+                                                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+                                                        {text: 'OK', onPress: () => {this.removeUserEvent(uEventKeys[index],
+                                                                                                          uEventIds[index])}}
+                                                        ]);}}
+                                    title="Cancel"
+                                    color="orange"
                                 />
                             </CardAction>
                         </Card>

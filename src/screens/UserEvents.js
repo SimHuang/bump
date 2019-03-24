@@ -124,9 +124,16 @@ class UserEvents extends Component {
                                 separator={true} 
                                 inColumn={false}>
                                 <CardButton
-                                onPress={() => {this.removeUserEvent(uEventKeys[index])}}
-                                title="Leave"
-                                color="orange"
+                                    onPress={() => {this.removeUserEvent(uEventKeys[index])}}
+                                    onPress={() => {Alert.alert(
+                                                        'Leaving Event',
+                                                        'Are you sure?',
+                                                        [
+                                                        {text: 'Cancel', onPress: () => console.log('Cancel Pressed')},
+                                                        {text: 'OK', onPress: () => {this.removeUserEvent(uEventKeys[index])}}
+                                                        ]);}}
+                                    title="Leave"
+                                    color="orange"
                                 />
                             </CardAction>
                         </Card>
