@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
+import { Alert, Dimensions, Platform, StyleSheet, Text, View, TouchableHighlight } from 'react-native';
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from '../../config';
@@ -43,7 +43,7 @@ class EventFeed extends Component {
                 });
 
             });
-        
+
         //add listener for category change
         this.database.ref('/users/' + userID).on('child_changed', (data) => {
             this.setState({filter: data.val()});
@@ -66,6 +66,31 @@ class EventFeed extends Component {
             console.log("user signed out");
             this.props.navigation.navigate('LoginNavigator');
         });
+    }
+
+    refreshEvents(eArg) {
+        var windowHeight = Dimensions.get('window').height,
+          height = eArg.nativeEvent.contentSize.height,
+          offset = eArg.nativeEvent.contentOffset.y;
+
+        if( windowHeight + offset >= height ){
+            //Alert.alert("Bottom reached");
+            this.database.ref('/events').once('value')
+            .then(snapshot => {
+                this.setState({events:snapshot.val()});
+                value.setCurrentEvents(snapshot.val());
+
+                //get user info
+                this.database.ref('/users/' + userID).once('value')
+                .then(snapshot => {
+                    value.setFilter(snapshot.val().filter);
+                    this.setState({isLoading: false, user:snapshot.val(), filter: snapshot.val().filter});
+                    // value.setCurrentEvents(snapshot.val());
+                });
+
+            });
+        }
+
     }
 
     goToCreateEventScreen() {
@@ -174,7 +199,8 @@ class EventFeed extends Component {
                                 />}
                                 containerStyle={{ backgroundColor: '#fff' }}
                                 />
-                                <ScrollView>
+                                <ScrollView
+                                     onScroll={(eArg) => this.refreshEvents(eArg)}>
                                     {this.state.filter && this.state.filter !== 'None' ? this.renderFilteredEvents(value) : this.renderEventCards(value)}
                                 </ScrollView>
                             </React.Fragment>

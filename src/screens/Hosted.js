@@ -66,6 +66,15 @@ class Hosted extends Component {
         this.setState({ events: this.state.events});
     }
 
+    removeDeadEvent(key, value) {
+        const userID = firebase.auth().currentUser.uid;
+
+        //Remove event from list of user posted events
+        firebase.database().ref('/users/' + userID + '/postedEvents').child(key).remove();
+        delete this.state.userPostedEvents[key];
+        this.setState({ userPostedEvents: this.state.userPostedEvents});
+    }
+
     renderEventCards() {
 
         if(!this.state.userPostedEvents)
@@ -92,46 +101,56 @@ class Hosted extends Component {
 
         return uEventIds.map((uEventId, index) => {
 
-            event = events[uEventId];
-            switch (event.eventCategory)
+            if (!events[uEventId])
             {
-                case 'Sports': selectedIcon = eventIcons.sports; break;
-                case 'Party': selectedIcon = eventIcons.party; break;
-                case 'Food': selectedIcon = eventIcons.food; break;
-                default: selectedIcon = eventIcons.food; break;
+                //Remove the entry and move on
+                this.removeDeadEvent(uEventKeys[index]);
+                return;
             }
-
-            return (
-                <TouchableWithoutFeedback
-                    onPress={() => { this.goSeeEventDetail() }}
-                >
-                    <Card>
-                        <CardImage 
-                            source={selectedIcon}
-                            title={event.eventCategory}
-                        />
-                        <CardTitle 
-                            title={event.eventTitle}
-                            subtitle="Terence Lau"
-                        />
-                        <CardContent text= {event.eventDescription} />
-                        <CardAction 
-                            separator={true} 
-                            inColumn={false}>
-                            <CardButton
-                            onPress={() => {this.goEditEvent(uEventIds[index])}}
-                            title="Edit"
-                            color="orange"
+            else
+            {
+                //Valid entry, proceed to display
+                event = events[uEventId];
+                switch (event.eventCategory)
+                {
+                    case 'Sports': selectedIcon = eventIcons.sports; break;
+                    case 'Party': selectedIcon = eventIcons.party; break;
+                    case 'Food': selectedIcon = eventIcons.food; break;
+                    default: selectedIcon = eventIcons.food; break;
+                }
+    
+                return (
+                    <TouchableWithoutFeedback
+                        onPress={() => { this.goSeeEventDetail() }}
+                    >
+                        <Card>
+                            <CardImage 
+                                source={selectedIcon}
+                                title={event.eventCategory}
                             />
-                            <CardButton
-                            onPress={() => {this.removeUserEvent(uEventKeys[index], uEventIds[index])}}
-                            title="Cancel"
-                            color="orange"
+                            <CardTitle 
+                                title={event.eventTitle}
+                                subtitle="Terence Lau"
                             />
-                        </CardAction>
-                    </Card>
-                </TouchableWithoutFeedback>
-            );
+                            <CardContent text= {event.eventDescription} />
+                            <CardAction 
+                                separator={true} 
+                                inColumn={false}>
+                                <CardButton
+                                onPress={() => {this.goEditEvent(uEventIds[index])}}
+                                title="Edit"
+                                color="orange"
+                                />
+                                <CardButton
+                                onPress={() => {this.removeUserEvent(uEventKeys[index], uEventIds[index])}}
+                                title="Cancel"
+                                color="orange"
+                                />
+                            </CardAction>
+                        </Card>
+                    </TouchableWithoutFeedback>
+                );
+            }
         });
     }
 
