@@ -111,7 +111,12 @@ const SignupNavigator = createStackNavigator({
 });
 
 const LoginNavigator = createStackNavigator({
-  Login: Login
+  Login: {
+    screen: Login,
+    navigationOptions: {
+      header: null
+    }
+  }
 });
 
 const SplashNavigator = createStackNavigator({

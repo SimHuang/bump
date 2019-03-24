@@ -189,8 +189,6 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     btn: {
-        position: 'absolute',
-        bottom:0,
         margin: 4
     },
     smallBtn: {
