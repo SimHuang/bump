@@ -140,11 +140,11 @@ class App extends Component<Props> {
   
   render() {
     return (
-      <GlobalContext>
-        <Root>
+      <Root>
+        <GlobalContext>
           <Main />
-        </Root>
-      </GlobalContext>
+        </GlobalContext>
+      </Root>
     );
   }
 }
