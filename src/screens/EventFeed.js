@@ -107,6 +107,17 @@ class EventFeed extends Component {
 
     }
 
+    joinEvent(eventId) {
+        const myUserId = firebase.auth().currentUser.uid;
+
+         firebase.database().ref('/users/' + myUserId + '/currentEvents').push().set(eventId, error => {	
+            setTimeout(() => {	
+              this.props.navigation.navigate('EventFeed');	
+            }, 1000);	
+          });
+          Alert.alert("You have joined this event")
+    }
+
     renderEventCards(value) {
         const { events } = this.state;
         const eventIds = Object.keys(events);
@@ -154,7 +165,7 @@ class EventFeed extends Component {
                                 color="orange"
                             />
                             <CardButton
-                                onPress={() => {console.log("Joining Event")}}
+                                onPress={() => {this.joinEvent(eventIds[index])}}
                                 title="Join"
                                 color="orange"
                             />
@@ -223,7 +234,7 @@ class EventFeed extends Component {
                                 color="orange"
                             />
                             <CardButton
-                                onPress={() => {console.log("Joining Event")}}
+                                onPress={() => {this.joinEvent(eventIds[index])}}
                                 title="Join"
                                 color="orange"
                             />
@@ -253,6 +264,7 @@ class EventFeed extends Component {
     }
 
     render() {
+
         console.log(this.state.isModalVisible);
         if(this.state.isLoading) {
             return this.renderLoading();
