@@ -198,7 +198,7 @@ class Hosted extends Component {
                             <React.Fragment>
                                 <Header
                                     containerStyle={styles.header}
-                                    centerComponent={{ text: 'Hosted Events'}}
+                                    centerComponent={{ text: 'Hosted Events', style: { color: '#fff' } }}
                                     rightComponent={<Icon name="home"
                                         type='font-awesome'
                                         onPress={() => this.goToHomeScreen()}

@@ -179,7 +179,7 @@ class UserEvents extends Component {
                             <React.Fragment>
                                 <Header
                                     containerStyle={styles.header}
-                                    centerComponent={{ text: 'Joined Events'}}
+                                    centerComponent={{ text: 'Joined Events', style: { color: '#fff' } }}
                                     rightComponent={<Icon name="home"
                                         type='font-awesome'
                                         onPress={() => this.goToHomeScreen()}
