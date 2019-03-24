@@ -52,18 +52,34 @@ class EventDetail extends Component {
     }
 
     renderComments(event) {
-        let comments = Object.values(event.comments);
-        console.log(Object.values(comments));
-        return comments.map((comment) => {
-            return (
+
+        if(!event.comments)
+        {
+            return(
                 <Text
                     style={{
                         fontSize: 15,
-                        margin: 5
+                        margin: 5,
+                        color:"grey"
                     }}
-                >{comment.comment}</Text>
+                >{"No comments have been made yet"}</Text>
             )
-        })
+        }
+        else
+        {
+            let comments = Object.values(event.comments);
+            console.log(Object.values(comments));
+            return comments.map((comment) => {
+                return (
+                    <Text
+                        style={{
+                            fontSize: 15,
+                            margin: 5
+                        }}
+                    >{comment.comment}</Text>
+                )
+            })
+        }
     }
 
     render() {

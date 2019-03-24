@@ -163,6 +163,7 @@ class CreateEvent extends React.Component {
           <View style={{flex:.5}}>
             <Button
               type = "outline"
+              titleStyle={{color:'orange'}}
               title={ !this.state.eventDate ? "..." : this.state.eventDate}
               onPress={this.showDateTimePicker} />
           </View>
@@ -178,6 +179,7 @@ class CreateEvent extends React.Component {
         <View style={{flex:1, justifyContent: 'flex-end', marginBottom:36}}>
           <Button
             title="Create Event" 
+            titleStyle={{color:'orange'}}
             type = "outline"
             color="orange"
             onPress={() => this.createEvent()} />

@@ -128,7 +128,7 @@ class EventFeed extends Component {
                 case 'Food': selectedIcon = eventIcons.food; break;
                 default: selectedIcon = eventIcons.food; break;
             }
-            
+
             return (
                 <TouchableHighlight
                     onPress={() => { this.goSeeEventDetail(eventIds[index], value) }}
@@ -280,7 +280,6 @@ class EventFeed extends Component {
                                     closeModal={() => this.setState({isModalVisible: false})}
                                     commentId={this.state.commentId}
                                 />
-                                
                             </React.Fragment>
                         )}
                     }

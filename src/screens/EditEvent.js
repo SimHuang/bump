@@ -4,18 +4,25 @@ import firebase from '@firebase/app';
 import '@firebase/auth';
 import '@firebase/database';
 
-import { StyleSheet, Alert, View, Text, Picker } from 'react-native';
-import { Header, Icon, Input, Button } from 'react-native-elements';
+import { Alert, TouchableOpacity, View, Text } from 'react-native';
+import { Header, Icon, Input, Divider, Button } from 'react-native-elements';
+import DateTimePicker from 'react-native-modal-datetime-picker';
+import { Container, Content, Picker, Form, Item, List, ListItem } from "native-base";
+import moment from "moment";
 
 class EditEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       eventTitle: '',
+      eventLocation: '',
       eventDescription: '',
-      eventCategory: 'Sports',
+      eventCategory: '',
+      eventDate: '',
+      eventAvailableSpots: '',
       message: '',
-      eventID: ''
+      eventID: '',
+      isDateTimePickerVisible: false
     }
     this.database = firebase.database();
   }
@@ -32,12 +39,39 @@ class EditEvent extends React.Component {
             const userObject = snapshot.val();
             this.setState({
                 eventTitle: userObject.eventTitle,
+                eventLocation: userObject.eventLocation,
                 eventDescription: userObject.eventDescription,
-                eventCategory: userObject.eventCategory
+                eventCategory: userObject.eventCategory,
+                eventDate: userObject.eventDate,
+                eventAvailableSpots: userObject.eventAvailableSpots
             });
         }
     });
   }
+
+  validateNumericInput(text)
+  {
+    let newText = '';
+    let numbers = '0123456789';
+
+    for (var i=0; i < text.length; i++) {
+        if(numbers.indexOf(text[i]) > -1 ) {
+            newText = newText + text[i];
+        }
+        else {
+            // your call back function
+            alert("please enter numbers only");
+        }
+    }
+    this.setState({ eventAvailableSpots: newText });
+  }
+
+  showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
+  hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
+  handleDatePicked = (date) => {
+    this.setState({eventDate: moment(date).format('MMMM Do YYYY, h:mm a')});
+    this.hideDateTimePicker();
+  };
 
   goToHomeScreen() {
     // ET Go Home
@@ -48,12 +82,16 @@ class EditEvent extends React.Component {
     const key = this.state.eventID;
     firebase.database().ref('/events/' + key).update({
       eventTitle: this.state.eventTitle,
+      eventLocation: this.state.eventLocation,
       eventDescription: this.state.eventDescription,
-      eventCategory: this.state.eventCategory
+      eventCategory: this.state.eventCategory,
+      eventDate: this.state.eventDate,
+      eventAvailableSpots: this.state.eventAvailableSpots
     }, error => {
       if(error) {
         this.setState({message: 'Error editing event'});
-      } else {
+      }
+      else {
         this.setState({message: 'Event edited Successfully'});
       }
       setTimeout(() => {
@@ -67,9 +105,10 @@ class EditEvent extends React.Component {
     return (
       <View style={{backgroundColor: 'white', flex:1}}>
         <Header
-            containerStyle={styles.header}
+            containerStyle={{backgroundColor: '#1e9e88'}}
             leftComponent={<Icon name="angle-left" 
-                                type="font-awesome" 
+                                type="font-awesome"
+                                color="#ffffff"
                                 onPress={() => this.props.navigation.navigate('AppNavigator')}/>}
             rightComponent={<Icon name="home" 
                                 type='font-awesome' 
@@ -77,51 +116,87 @@ class EditEvent extends React.Component {
                                 color="#ffffff"/>}
         />
 
-        <Input
+<Input
           placeholder="Event Title" 
-          leftIcon={{ type: 'font-awesome', name: 'chevron-left' }}
           value={this.state.eventTitle}
           onChangeText={(eventTitle) => this.setState({eventTitle})}/>
 
+       <Input
+          placeholder="Event Location" 
+          value={this.state.eventLocation}
+          onChangeText={(eventLocation) => this.setState({eventLocation})}/> 
+
         <Input
+          multiline = {true}
           placeholder="Event Description"
           value={this.state.eventDescription}
           onChangeText={eventDescription => this.setState({eventDescription})} />
 
+        <Input
+          keyboardType='numeric'
+          placeholder="Available Spots"
+          value={this.state.eventAvailableSpots}
+          maxLength={5}
+          onChangeText={(text)=>this.validateNumericInput(text)} />
+
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <View style={{flex:.5}}>
-            <Text>{'Event Category:'}</Text>
+            <ListItem>
+              <Text>Select Category</Text>
+            </ListItem>
           </View>
-          <View style={{flex:.2}}>
-            <Picker
-              mode="dropdown"
-              selectedValue={this.state.eventCategory}
-              style={{height: 50, width: 500}}
-              onValueChange={(itemValue, itemIndex) =>
-                this.setState({eventCategory: itemValue})
-              }>
-              <Picker.Item label="Sports" value="Sports" />
-              <Picker.Item label="Party" value="Party" />
-              <Picker.Item label="Food" value="Food" />
-            </Picker>
+          <View style={{flex:.5}}>
+          <Picker
+            iosIcon={<Icon name="arrow-down" />}
+            mode='dropdown'
+            selectedValue={this.state.eventCategory}
+            onValueChange={(itemValue, itemIndex) =>
+              this.setState({eventCategory: itemValue})
+            }>
+            <Picker.Item it label="..." value='' />
+            <Picker.Item label="Sports" value="Sports" />
+            <Picker.Item label="Party" value="Party" />
+            <Picker.Item label="Food" value="Food" />
+          </Picker>
           </View>
         </View>
 
-        <Button
-          color="orange"
-          title="Edit Event"
-          onPress={() => this.EditEvent()} />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{flex:.5}}>
+          <ListItem>
+              <Text>Select DateTime</Text>
+            </ListItem>
+          </View>
+          <View style={{flex:.5}}>
+            <Button
+              type = "outline"
+              title={ !this.state.eventDate ? "..." : this.state.eventDate}
+              titleStyle={{color:'orange'}}
+              onPress={this.showDateTimePicker} />
+          </View>
+
+          <DateTimePicker
+            mode="datetime"
+            isVisible={this.state.isDateTimePickerVisible}
+            onConfirm={this.handleDatePicked}
+            onCancel={this.hideDateTimePicker}
+          />
+        </View>
+
+        <View style={{flex:1, justifyContent: 'flex-end', marginBottom:36}}>
+          <Button
+            color={'#ffffff'}
+            title="Edit Event"
+            titleStyle={{color:'orange'}}
+            type = "outline"
+            color="orange"
+            onPress={() => this.EditEvent()} />
+        </View>
+
         <Text>{this.state.message}</Text>
       </View>
     )
   }
 }
-
-const styles = StyleSheet.create({
-
-    header: {
-        backgroundColor: '#1e9e88'
-    }
-});
 
 export default EditEvent
