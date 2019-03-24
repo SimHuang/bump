@@ -69,13 +69,24 @@ class EventFeed extends Component {
         });
     }
 
+    joinEvent(eventId) {
+        const myUserId = firebase.auth().currentUser.uid;
+
+        firebase.database().ref('/users/' + myUserId + '/currentEvents').push().set(eventId, error => {
+            setTimeout(() => {
+              this.props.navigation.navigate('EventFeed');
+            }, 1000);
+          });
+
+          Alert.alert("You have joined this event")
+    }
+
     refreshEvents(eArg) {
         var windowHeight = Dimensions.get('window').height,
           height = eArg.nativeEvent.contentSize.height,
           offset = eArg.nativeEvent.contentOffset.y;
 
         if( windowHeight + offset >= height ){
-            //Alert.alert("Bottom reached");
             this.database.ref('/events').once('value')
             .then(snapshot => {
                 this.setState({events:snapshot.val()});
@@ -91,7 +102,6 @@ class EventFeed extends Component {
 
             });
         }
-
     }
 
     goToCreateEventScreen() {
@@ -127,7 +137,7 @@ class EventFeed extends Component {
                 case 'Food': selectedIcon = eventIcons.food; break;
                 default: selectedIcon = eventIcons.food; break;
             }
-            
+
             return (
                 <TouchableHighlight
                     onPress={() => { this.goSeeEventDetail(eventIds[index], value) }}
@@ -147,12 +157,12 @@ class EventFeed extends Component {
                             separator={true} 
                             inColumn={false}>
                             <CardButton
-                                onPress={() => {console.log("Commenting Event")}}
+                                onPress={() => {Alert.alert("Placeholder comment")}}
                                 title="Comment"
                                 color="orange"
                             />
                             <CardButton
-                                onPress={() => {console.log("Joining Event")}}
+                                onPress={() => {this.joinEvent(eventIds[index])}}
                                 title="Join"
                                 color="orange"
                             />
@@ -215,12 +225,12 @@ class EventFeed extends Component {
                             separator={true} 
                             inColumn={false}>
                             <CardButton
-                                onPress={() => {console.log("Commenting Event")}}
+                                onPress={() => {Alert.alert("Placeholder comment")}}
                                 title="Comment"
                                 color="orange"
                             />
                             <CardButton
-                                onPress={() => {console.log("Joining Event")}}
+                                onPress={() => {this.joinEvent(eventIds[index])}}
                                 title="Join"
                                 color="orange"
                             />
