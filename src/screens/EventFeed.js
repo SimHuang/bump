@@ -6,6 +6,7 @@ import { firebaseConfig } from '../../config';
 import { Card, Button, Header, Icon } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import { NavigationEvents } from 'react-navigation';
+import { Spinner } from 'native-base';
 
 import GlobalContext, { EventContext } from '../context/GlobalContext';
 
@@ -137,8 +138,14 @@ class EventFeed extends Component {
 
     renderLoading() {
         return (
-            <View>
-                <Text>Loading...</Text>
+            <View style={{
+                flex: 1,
+                flexDirection: 'column',
+                justifyContent: 'center',
+                backgroundColor: '#fff'
+              }}>
+                {/* <Text>Loading...</Text> */}
+                <Spinner color="#1e9e88"/>
             </View>
         );
     }
@@ -148,7 +155,6 @@ class EventFeed extends Component {
     }
 
     render() {
-        console.log(this.state);
         if(this.state.isLoading) {
             return this.renderLoading();
         }

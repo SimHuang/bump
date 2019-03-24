@@ -59,6 +59,7 @@ class Setting extends React.Component {
             return (
               <Content>
                 <Form>
+                  <Text style={styles.label}>Category Preference</Text>
                   <Picker
                     iosIcon={<Icon name="arrow-down" />}
                     mode='dropdown'
@@ -90,6 +91,11 @@ class Setting extends React.Component {
 const styles = StyleSheet.create({
   header: {
     backgroundColor: '#1e9e88'
+  },
+
+  label: {
+    marginLeft: 18,
+    marginTop: 10
   },
 
   logoutBtn: {
