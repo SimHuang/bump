@@ -41,8 +41,8 @@ class UserEvents extends Component {
                 }
             }).catch((error) => {});
 
-        //add listener for category change
-        this.database.ref('/users/' + userID).on('child_changed', (data) => {
+        // //add listener for category change
+        this.database.ref('/users/' + userID + '/currentEvents').on('child_changed', (data) => {
             this.setState({userJoinedEvents: data.val()});
         });
     }
