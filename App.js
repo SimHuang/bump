@@ -99,7 +99,12 @@ const AppNavigator = createBottomTabNavigator({
 });
 
 const SignupNavigator = createStackNavigator({
-  Signup: Signup
+  Signup: {
+    screen: Signup,
+    navigationOptions: {
+      header: null
+    }
+  }
 });
 
 const LoginNavigator = createStackNavigator({

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import { Input, Button, Header } from 'react-native-elements';
+import { Toast } from 'native-base';
 
 import { firebaseConfig } from '../../config';
 import firebase from '@firebase/app';
@@ -80,7 +81,8 @@ class Signup extends Component {
     validateForm() {
         const userInput = this.state;
         if (!userInput.email || !userInput.email.includes('@')) {
-            this.setState({message: 'Please enter a valid email.'})
+            // this.setState({message: 'Please enter a valid email.'})
+            
             return false;
         }
 
@@ -115,7 +117,8 @@ class Signup extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.container}>
+                <Text style={styles.label}>Create an Account</Text>
                 <Input
                     placeholder="Enter email"
                     value={this.state.email}
@@ -148,19 +151,52 @@ class Signup extends Component {
                     name="passwordAgain"
                     type="password"
                 />
-                <Button 
-                    title="Create Account"
-                    onPress={()=> this.createAccount()}
-                />
-                <Button 
-                    title="Already have an account? Log in."
-                    type="clear"
-                    onPress={() => this.loginOnpressHanlder()}
-                />
                 <Text>{this.state.message}</Text>
+                <View style={styles.btn}>
+                    <Button 
+                        title="Create Account"
+                        onPress={()=> this.createAccount()}
+                    />
+                    <Button 
+                        buttonStyle={{
+                            color:'#1e9e88'
+                            
+                        }}
+                        style={{
+                            color:'#1e9e88'
+                        }}
+                        title="Already have an account? Log in."
+                        type="clear"
+                        onPress={() => this.loginOnpressHanlder()}
+                        />  
+                </View>
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    container: {
+        // flex: 1,
+        marginTop: 30
+    },
+    label: {
+        color: '#1e9e88',
+        fontSize: 30,
+        fontWeight: 'bold',
+        marginTop: 20,
+        marginLeft: 10,
+        marginBottom: 10
+    },
+    btn: {
+        position: 'absolute',
+        bottom:0,
+        margin: 4
+    },
+    smallBtn: {
+        fontSize: 10,
+        color: '#1e9e88',
+    }
+});
 
 export default Signup
