@@ -19,6 +19,7 @@ import { createSwitchNavigator,
 
 import firebase from '@firebase/app';
 import { firebaseConfig } from './config';
+import { Root } from 'native-base';
 
 // import reducers from './src/reducer/index';
 
@@ -134,7 +135,9 @@ class App extends Component<Props> {
   render() {
     return (
       <GlobalContext>
-        <Main />
+        <Root>
+          <Main />
+        </Root>
       </GlobalContext>
     );
   }
