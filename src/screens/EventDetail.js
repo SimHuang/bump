@@ -24,6 +24,9 @@ class EventDetail extends Component {
                             <Input disabled placeholder={"Date: " + eventDetail.eventDate}/>
                         </Item>
                         <Item disabled>
+                            <Input disabled placeholder={"Location: " + eventDetail.eventLocation}/>
+                        </Item>
+                        <Item disabled>
                             <Input disabled placeholder={"Available Spots: " + eventDetail.eventAvailableSpots}/>
                         </Item>
                         <Item disabled>

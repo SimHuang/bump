@@ -8,12 +8,14 @@ import { Alert, TouchableOpacity, View, Text } from 'react-native';
 import { Header, Icon, Input, Divider, Button } from 'react-native-elements';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { Container, Content, Picker, Form, Item, List, ListItem } from "native-base";
+import moment from "moment";
 
 class CreateEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       eventTitle: '',
+      eventLocation: '',
       eventDescription: '',
       eventCategory: '',
       eventDate: '',
@@ -48,17 +50,19 @@ class CreateEvent extends React.Component {
   showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
   hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
   handleDatePicked = (date) => {
-    this.setState({eventDate: date.toString()});
+    this.setState({eventDate: moment(date).format('MMMM Do YYYY, h:mm a')});
     this.hideDateTimePicker();
   };
 
   createEvent() {
 
     if(!this.state.eventTitle || 
+       !this.state.eventLocation ||
        !this.state.eventDescription || 
        !this.state.eventCategory || 
        !this.state.eventDate || 
        !this.state.eventAvailableSpots)
+
     {
       Alert.alert("Please fill in all fields");
       return;
@@ -69,6 +73,7 @@ class CreateEvent extends React.Component {
     firebase.database().ref('/events/' + newPostKey).set({
       user: userId,
       eventTitle: this.state.eventTitle,
+      eventLocation: this.state.eventLocation,
       eventDescription: this.state.eventDescription,
       eventCategory: this.state.eventCategory,
       eventDate: this.state.eventDate,
@@ -109,7 +114,13 @@ class CreateEvent extends React.Component {
           value={this.state.eventTitle}
           onChangeText={(eventTitle) => this.setState({eventTitle})}/>
 
+       <Input
+          placeholder="Event Location" 
+          value={this.state.eventLocation}
+          onChangeText={(eventLocation) => this.setState({eventLocation})}/> 
+
         <Input
+          multiline = {true}
           placeholder="Event Description"
           value={this.state.eventDescription}
           onChangeText={eventDescription => this.setState({eventDescription})} />
