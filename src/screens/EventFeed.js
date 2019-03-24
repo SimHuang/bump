@@ -11,6 +11,8 @@ import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 
 
 import GlobalContext, { EventContext } from '../context/GlobalContext';
 
+import CommentModal from '../../src/Modal/CommentModal';
+
 class EventFeed extends Component {
     constructor(props) {
         super(props);
@@ -19,7 +21,9 @@ class EventFeed extends Component {
             user: null,
             events: null,
             filter: null,
-            eventRemoved: null
+            eventRemoved: null,
+            isModalVisible: false,
+            commentId: -1
         }
         this.database = firebase.database();
         // this.myContext = null;
@@ -62,31 +66,13 @@ class EventFeed extends Component {
         }
     }
 
-    logout() {
-        firebase.auth().signOut().then(() => {
-            console.log("user signed out");
-            this.props.navigation.navigate('LoginNavigator');
-        });
-    }
-
-    joinEvent(eventId) {
-        const myUserId = firebase.auth().currentUser.uid;
-
-        firebase.database().ref('/users/' + myUserId + '/currentEvents').push().set(eventId, error => {
-            setTimeout(() => {
-              this.props.navigation.navigate('EventFeed');
-            }, 1000);
-          });
-
-          Alert.alert("You have joined this event")
-    }
-
     refreshEvents(eArg) {
         var windowHeight = Dimensions.get('window').height,
           height = eArg.nativeEvent.contentSize.height,
           offset = eArg.nativeEvent.contentOffset.y;
 
         if( windowHeight + offset >= height ){
+            //Alert.alert("Bottom reached");
             this.database.ref('/events').once('value')
             .then(snapshot => {
                 this.setState({events:snapshot.val()});
@@ -102,6 +88,7 @@ class EventFeed extends Component {
 
             });
         }
+
     }
 
     goToCreateEventScreen() {
@@ -114,6 +101,10 @@ class EventFeed extends Component {
         value.setSelectedEvent(event, () => {
             this.props.navigation.navigate('EventDetail');
         });
+    }
+
+    commentOnEvent() {
+
     }
 
     renderEventCards(value) {
@@ -137,7 +128,7 @@ class EventFeed extends Component {
                 case 'Food': selectedIcon = eventIcons.food; break;
                 default: selectedIcon = eventIcons.food; break;
             }
-
+            
             return (
                 <TouchableHighlight
                     onPress={() => { this.goSeeEventDetail(eventIds[index], value) }}
@@ -157,12 +148,12 @@ class EventFeed extends Component {
                             separator={true} 
                             inColumn={false}>
                             <CardButton
-                                onPress={() => {Alert.alert("Placeholder comment")}}
+                                onPress={() => this.setState({isModalVisible: true, commentId: eventIds[index]})}
                                 title="Comment"
                                 color="orange"
                             />
                             <CardButton
-                                onPress={() => {this.joinEvent(eventIds[index])}}
+                                onPress={() => {console.log("Joining Event")}}
                                 title="Join"
                                 color="orange"
                             />
@@ -225,12 +216,12 @@ class EventFeed extends Component {
                             separator={true} 
                             inColumn={false}>
                             <CardButton
-                                onPress={() => {Alert.alert("Placeholder comment")}}
+                                onPress={() => this.setState({isModalVisible: true, commentId: eventIds[index]})}
                                 title="Comment"
                                 color="orange"
                             />
                             <CardButton
-                                onPress={() => {this.joinEvent(eventIds[index])}}
+                                onPress={() => {console.log("Joining Event")}}
                                 title="Join"
                                 color="orange"
                             />
@@ -260,6 +251,7 @@ class EventFeed extends Component {
     }
 
     render() {
+        console.log(this.state.isModalVisible);
         if(this.state.isLoading) {
             return this.renderLoading();
         }
@@ -283,6 +275,12 @@ class EventFeed extends Component {
                                      onScroll={(eArg) => this.refreshEvents(eArg)}>
                                     {this.state.filter && this.state.filter !== 'None' ? this.renderFilteredEvents(value) : this.renderEventCards(value)}
                                 </ScrollView>
+                                <CommentModal 
+                                    isVisible={this.state.isModalVisible}
+                                    closeModal={() => this.setState({isModalVisible: false})}
+                                    commentId={this.state.commentId}
+                                />
+                                
                             </React.Fragment>
                         )}
                     }

@@ -33,10 +33,34 @@ class EventDetail extends Component {
                         </Item>
                         <Item disabled>
                         </Item>
+                        <Text
+                            style={{
+                                fontWeight: 'bold',
+                                fontSize: 18,
+                                marginTop: 20,
+                                marginLeft: 5
+                            }}
+                        >Comments</Text>
+                        {this.renderComments(eventDetail)}
                     </Content>
                 </Container>
             </React.Fragment>
         )
+    }
+
+    renderComments(event) {
+        let comments = Object.values(event.comments);
+        console.log(Object.values(comments));
+        return comments.map((comment) => {
+            return (
+                <Text
+                    style={{
+                        fontSize: 15,
+                        margin: 5
+                    }}
+                >{comment.comment}</Text>
+            )
+        })
     }
 
     render() {
