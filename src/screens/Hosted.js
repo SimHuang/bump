@@ -88,8 +88,14 @@ class Hosted extends Component {
         if(!this.state.userPostedEvents)
         {
             return (
-                <View>
-                    <Text>{"Try posting an event!"}</Text>
+                <View
+                    style={{
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        marginTop: 20
+                    }}
+                >
+                    <Text>You did not post any events!</Text>
                 </View>
             )
         }
