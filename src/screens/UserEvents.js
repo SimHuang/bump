@@ -23,27 +23,25 @@ class UserEvents extends Component {
 
     componentDidMount() {
         let value = this.context;
-        this.database.ref('/events').once('value')
-            .then(snapshot => {
-                console.log(snapshot.val());
-                this.setState({isLoading: false, events:snapshot.val()});
-                value.setCurrentEvents(snapshot.val());
-            });
 
-        const userID = firebase.auth().currentUser.uid;
-        this.database.ref('/users/' + userID).once('value')
-            .then(snapshot => {
-                if(snapshot.exists()) {
-                    const userObject = snapshot.val();
-                    this.setState({
-                        userJoinedEvents: userObject.currentEvents
-                    });
-                }
-            }).catch((error) => {});
+        this.props.navigation.addListener('willFocus', (route) => { 
+            this.database.ref('/events').once('value')
+                .then(snapshot => {
+                    console.log(snapshot.val());
+                    this.setState({isLoading: false, events:snapshot.val()});
+                    value.setCurrentEvents(snapshot.val());
+                });
 
-        // //add listener for category change
-        this.database.ref('/users/' + userID + '/currentEvents').on('child_changed', (data) => {
-            this.setState({userJoinedEvents: data.val()});
+            const userID = firebase.auth().currentUser.uid;
+            this.database.ref('/users/' + userID).once('value')
+                .then(snapshot => {
+                    if(snapshot.exists()) {
+                        const userObject = snapshot.val();
+                        this.setState({
+                            userJoinedEvents: userObject.currentEvents
+                        });
+                    }
+                }).catch((error) => {});
         });
     }
 
