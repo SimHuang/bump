@@ -270,8 +270,6 @@ class EventFeed extends Component {
     }
 
     render() {
-
-        console.log(this.state.isModalVisible);
         if(this.state.isLoading) {
             return this.renderLoading();
         }
@@ -293,7 +291,7 @@ class EventFeed extends Component {
                                 />
                                 <ScrollView
                                      onScroll={(eArg) => this.refreshEvents(eArg)}>
-                                    {this.state.filter && this.state.filter !== 'None' ? this.renderFilteredEvents(value) : this.renderEventCards(value)}
+                                    {(this.state.filter && this.state.filter !== 'None') ? this.renderFilteredEvents(value) : this.renderEventCards(value)}
                                 </ScrollView>
                                 <CommentModal 
                                     isVisible={this.state.isModalVisible}

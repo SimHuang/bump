@@ -25,17 +25,11 @@ class Signup extends Component {
     }
 
     componentDidMount() {
-        console.log('you are in the sign up screen');
         //firebase.initializeApp(firebaseConfig);
         this.database = firebase.database();
         this.unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+            console.log('attempting atuehtnication ');
             if (user) {
-                console.log('user logged in laallalalla');
-                // user.updateProfile({
-                //     firstName: this.state.firstName,
-                //     lastName: this.state.lastName,
-                //     fullName: this.state.firstName + this.state.lastName
-                // });
                 this.writeUserToDB(user);
                 this.setState({message: 'user created'});
                 this.props.navigation.navigate('AppNavigator');
@@ -54,6 +48,7 @@ class Signup extends Component {
     writeUserToDB(user) {
         const userInfo = this.state;
         const userId = firebase.auth().currentUser.uid;
+        console.log('creating user object');
         this.database.ref('/users/' + userId).set({
             email: userInfo.email,
             firstName: userInfo.firstName,
@@ -82,27 +77,41 @@ class Signup extends Component {
         const userInput = this.state;
         if (!userInput.email || !userInput.email.includes('@')) {
             // this.setState({message: 'Please enter a valid email.'})
-            
+            Toast.show({
+                text: 'Please enter a valid email'
+            });
             return false;
         }
 
         if(!userInput.firstName || userInput.firstName === '') {
-            this.setState({message: 'Please enter a valid first name'});
+            // this.setState({message: 'Please enter a valid first name'});
+            Toast.show({
+                text: 'First Name Field Required'
+            });
             return false;
         }
         
         if (!userInput.lastName || userInput.lastName === '') {
-            this.setState({message: 'Please enter a valid last name'})
+            // this.setState({message: 'Please enter a valid last name'})
+            Toast.show({
+                text: 'Last Name Field Required'
+            });
             return false;
         }
 
         if (!userInput.password || userInput.password === '') {
-            this.setState({message: 'Please enter a valid password'});
+            // this.setState({message: 'Please enter a valid password'});
+            Toast.show({
+                text: 'Please enter a valid password'
+            });
             return false;
         }
 
         if (!userInput.passwordAgain || userInput.passwordAgain === '') {
-            this.setState({message: 'Password does not match.'});
+            // this.setState({message: 'Password does not match.'});
+            Toast.show({
+                text: 'Password does not match'
+            });
             return false;
         }
         // console.log('error craeting account');

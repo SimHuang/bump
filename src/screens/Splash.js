@@ -8,6 +8,7 @@ export default class Splash extends Component {
     
     constructor(props){
         super(props);
+        this.sub = null;
     }
 
     componentDidMount(){
@@ -16,13 +17,18 @@ export default class Splash extends Component {
 
         const {navigate} = this.props.navigation;
         
-        firebase.auth().onAuthStateChanged(user => {
+        this.sub = firebase.auth().onAuthStateChanged(user => {
             if(user){
                 navigate('AppNavigator')
             }
             navigate('LoginNavigator')
         })
 
+    }
+
+    componentWillUnmount() {
+        console.log('unount');
+        this.sub();
     }
 
     render(){
