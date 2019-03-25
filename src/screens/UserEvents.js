@@ -72,8 +72,14 @@ class UserEvents extends Component {
         if(!this.state.userJoinedEvents)
         {
             return (
-                <View>
-                    <Text>{"Try joining an event!"}</Text>
+                <View
+                style={{
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    marginTop: 20
+                }}
+                >
+                    <Text>Join some events now!</Text>
                 </View>
             )
         }
